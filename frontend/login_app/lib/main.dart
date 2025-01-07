@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
 
   try {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:5000/login'),
+      Uri.parse('http://127.0.0.1:5000/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'username': username, 'password': password}),
     );
@@ -138,7 +138,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   try {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:5000/register'),
+      Uri.parse('http://127.0.0.1:5000/register'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'username': username,
