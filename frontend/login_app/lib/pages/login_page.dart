@@ -42,8 +42,9 @@ class _LoginPageState extends State<LoginPage> {
       final String userType = data['user_type'];
 
       if (mounted) {
+        _usernameController.clear();
+        _passwordController.clear();
         if (userType == 'VehicleOwner') {
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => VehicleOwnerPage()));
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -51,9 +52,19 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else if (userType == 'SpaceOwner') {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => SpaceOwnerPage()));
+          Navigator.push(
+            context, 
+            MaterialPageRoute(
+              builder: (context) => SpaceOwnerPage(username: username),
+            ),
+          );
         } else if (userType == 'Admin') {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AdminPage()));
+          Navigator.push(
+            context, 
+            MaterialPageRoute(
+              builder: (context) => AdminPage(username: username),
+            ),
+          );
         }
       }
     } else {
