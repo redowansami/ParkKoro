@@ -12,7 +12,7 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
-//lib --> main.dart pages --> admin_page.dart login_page.dart register_page.dart space_owner_page.dart vehicle_owner_page.dart
+
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
