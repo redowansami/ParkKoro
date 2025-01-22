@@ -1,241 +1,3 @@
-# from flask import Flask, request, jsonify
-# from flask_sqlalchemy import SQLAlchemy
-# from flask_bcrypt import Bcrypt
-# from flask_jwt_extended import JWTManager, create_access_token
-# from flask_cors import CORS
-# from sqlalchemy import create_engine
-# from sqlalchemy.orm import sessionmaker
-# from datetime import timedelta
-
-# app = Flask(__name__)
-# CORS(app)
-
-# # Configuration for the main app database (mydb)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://sami:sami@localhost/mydb'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
-
-# # Configuration for the BRTA database (read-only)
-# app.config['SQLALCHEMY_BINDS'] = {
-#     'brta': 'postgresql://sami:sami@localhost/brta'
-# }
-
-# db = SQLAlchemy(app)
-# bcrypt = Bcrypt(app)
-# jwt = JWTManager(app)
-
-# # Configuration for the BRTA database (read-only)
-# brta_engine = create_engine('postgresql://sami:sami@localhost/brta', echo=True)
-# BrtaSession = sessionmaker(bind=brta_engine)
-# brta_session = BrtaSession()
-
-# # User model for mydb
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(80), unique=True, nullable=False)
-#     password = db.Column(db.String(200), nullable=False)
-#     user_type = db.Column(db.String(50), nullable=False)  # VehicleOwner, SpaceOwner, Admin
-#     nid = db.Column(db.String(20), unique=True, nullable=True)  # Optional, used for VehicleOwner
-#     email = db.Column(db.String(120), nullable=False)
-#     phone = db.Column(db.String(20), nullable=False)
-#     car_type = db.Column(db.String(50), nullable=True)  # Only for VehicleOwner
-#     license_plate_number = db.Column(db.String(50), nullable=True)  # Only for VehicleOwner
-#     driving_license_number = db.Column(db.String(50), nullable=True)  # Only for VehicleOwner
-
-# # Model for BRTA data (read-only)
-# class BrtaData(db.Model):
-#     __tablename__ = 'brta_data'
-#     __bind_key__ = 'brta'  # This tells SQLAlchemy this model is for the BRTA database
-
-#     # Set nid as the primary key since there's no 'id' column
-#     nid = db.Column(db.String(20), unique=True, primary_key=True)
-#     email = db.Column(db.String(120), nullable=False)
-#     phone_number = db.Column(db.String(20), nullable=False)
-#     car_type = db.Column(db.String(50), nullable=False)
-#     license_plate_number = db.Column(db.String(50), nullable=False)
-#     driving_license_number = db.Column(db.String(50), nullable=False)
-
-# # Pending Parking Spots Model
-# class PendingParkingSpot(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     spot_id = db.Column(db.String(50), nullable=False)
-#     gps_coordinates = db.Column(db.String(100), nullable=False)
-#     address = db.Column(db.String(255), nullable=False)
-#     pricing = db.Column(db.Float, nullable=False)
-#     availability_status = db.Column(db.Boolean, default=True)
-#     ev_charging_availability = db.Column(db.Boolean, default=False)
-#     surveillance_availability = db.Column(db.Boolean, default=False)
-
-# # Approved Parking Spots Model
-# class ParkingSpot(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     spot_id = db.Column(db.String(50), nullable=False)
-#     gps_coordinates = db.Column(db.String(100), nullable=False)
-#     address = db.Column(db.String(255), nullable=False)
-#     pricing = db.Column(db.Float, nullable=False)
-#     availability_status = db.Column(db.Boolean, default=True)
-#     ev_charging_availability = db.Column(db.Boolean, default=False)
-#     surveillance_availability = db.Column(db.Boolean, default=False)
-
-# # Initialize database
-# @app.before_request
-# def create_tables():
-#     db.create_all()
-
-# # Test Route
-# @app.route('/', methods=['GET'])
-# def home():
-#     return "Backend is working with multiple databases!"
-
-# # Registration route
-# @app.route('/register', methods=['POST'])
-# def register():
-#     data = request.get_json()
-#     username = data.get('username')
-#     password = data.get('password')
-#     user_type = data.get('user_type')
-#     nid = data.get('nid')
-#     email = data.get('email')
-#     phone = data.get('phone')
-#     car_type = data.get('car_type')
-#     license_plate_number = data.get('license_plate_number')
-#     driving_license_number = data.get('driving_license_number')
-
-#     if not username or not password or not user_type or not email or not phone:
-#         return jsonify({'message': 'Missing required fields'}), 400
-
-#     if user_type == 'VehicleOwner' and not nid:
-#         return jsonify({'message': 'NID is required for VehicleOwner'}), 400
-
-#     if User.query.filter_by(username=username).first():
-#         return jsonify({'message': 'Username already exists'}), 400
-
-#     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-#     new_user = User(
-#         username=username,
-#         password=hashed_password,
-#         user_type=user_type,
-#         nid=nid,
-#         email=email,
-#         phone=phone,
-#         car_type=car_type if user_type == 'VehicleOwner' else None,
-#         license_plate_number=license_plate_number if user_type == 'VehicleOwner' else None,
-#         driving_license_number=driving_license_number if user_type == 'VehicleOwner' else None
-#     )
-#     db.session.add(new_user)
-#     db.session.commit()
-
-#     return jsonify({'message': 'User registered successfully'}), 201
-
-# # Login route
-# @app.route('/login', methods=['POST'])
-# def login():
-#     data = request.get_json()
-#     username = data.get('username')
-#     password = data.get('password')
-
-#     user = User.query.filter_by(username=username).first()
-#     if user and bcrypt.check_password_hash(user.password, password):
-#         access_token = create_access_token(
-#             identity={
-#                 'username': user.username,
-#                 'user_type': user.user_type
-#             },
-#             expires_delta=timedelta(hours=1)
-#         )
-#         return jsonify({'access_token': access_token, 'user_type': user.user_type}), 200
-#     else:
-#         return jsonify({'message': 'Invalid credentials'}), 401
-
-# # Route to fetch VehicleOwner data from BRTA database
-# @app.route('/brta', methods=['GET'])
-# def fetch_vehicle_owner_data():
-#     nid = request.args.get('nid')
-#     if not nid:
-#         return jsonify({'message': 'NID is required'}), 400
-
-#     # Fetch data from the BRTA database (read-only)
-#     brta_record = brta_session.query(BrtaData).filter_by(nid=nid).first()
-#     if brta_record:
-#         return jsonify({
-#             'email': brta_record.email,
-#             'phone_number': brta_record.phone_number,
-#             'car_type': brta_record.car_type,
-#             'license_plate_number': brta_record.license_plate_number,
-#             'driving_license_number': brta_record.driving_license_number
-#         }), 200
-#     else:
-#         return jsonify({'message': 'Data not found for the provided NID'}), 404
-
-# # SpaceOwner adds a parking spot
-# @app.route('/add_parking_spot', methods=['POST'])
-# def add_parking_spot():
-#     data = request.get_json()
-#     new_spot = PendingParkingSpot(
-#         spot_id=data.get('spot_id'),
-#         gps_coordinates=data.get('gps_coordinates'),
-#         address=data.get('address'),
-#         pricing=data.get('pricing'),
-#         availability_status=data.get('availability_status', True),
-#         ev_charging_availability=data.get('ev_charging_availability', False),
-#         surveillance_availability=data.get('surveillance_availability', False)
-#     )
-#     db.session.add(new_spot)
-#     db.session.commit()
-#     return jsonify({'message': 'Parking spot submitted for review.'}), 201
-
-# # Admin lists pending parking spots
-# @app.route('/pending_parking_spots', methods=['GET'])
-# def pending_parking_spots():
-#     pending_spots = PendingParkingSpot.query.all()
-#     spots_list = [{
-#         'id': spot.id,
-#         'spot_id': spot.spot_id,
-#         'gps_coordinates': spot.gps_coordinates,
-#         'address': spot.address,
-#         'pricing': spot.pricing,
-#         'availability_status': spot.availability_status,
-#         'ev_charging_availability': spot.ev_charging_availability,
-#         'surveillance_availability': spot.surveillance_availability
-#     } for spot in pending_spots]
-#     return jsonify(spots_list), 200
-
-# # Admin reviews and approves/rejects a parking spot
-# @app.route('/review_parking_spot/<int:spot_id>', methods=['POST'])
-# def review_parking_spot(spot_id):
-#     data = request.get_json()
-#     action = data.get('action')  # 'approve' or 'reject'
-
-#     pending_spot = PendingParkingSpot.query.filter_by(id=spot_id).first()
-#     if not pending_spot:
-#         return jsonify({'message': 'Parking spot not found.'}), 404
-
-#     if action == 'approve':
-#         approved_spot = ParkingSpot(
-#             spot_id=pending_spot.spot_id,
-#             gps_coordinates=pending_spot.gps_coordinates,
-#             address=pending_spot.address,
-#             pricing=pending_spot.pricing,
-#             availability_status=pending_spot.availability_status,
-#             ev_charging_availability=pending_spot.ev_charging_availability,
-#             surveillance_availability=pending_spot.surveillance_availability
-#         )
-#         db.session.add(approved_spot)
-#         db.session.delete(pending_spot)
-#         db.session.commit()
-#         return jsonify({'message': 'Parking spot approved and added to database.'}), 200
-
-#     elif action == 'reject':
-#         db.session.delete(pending_spot)
-#         db.session.commit()
-#         return jsonify({'message': 'Parking spot rejected.'}), 200
-
-#     else:
-#         return jsonify({'message': 'Invalid action.'}), 400
-
-# if __name__ == '__main__':
-#     app.run(debug=True, host="127.0.0.1", port=5000)
-
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -447,6 +209,25 @@ def verified_parking_spots():
         'surveillance_availability': spot.surveillance_availability
     } for spot in verified_spots]
     return jsonify(spots_list), 200
+
+# Route to fetch VehicleOwner data from BRTA database
+@app.route('/brta', methods=['GET'])
+def fetch_vehicle_owner_data():
+    nid = request.args.get('nid')
+    if not nid:
+        return jsonify({'message': 'NID is required'}), 400
+    # Fetch data from the BRTA database (read-only)
+    brta_record = brta_session.query(BrtaData).filter_by(nid=nid).first()
+    if brta_record:
+        return jsonify({
+            'email': brta_record.email,
+            'phone_number': brta_record.phone_number,
+            'car_type': brta_record.car_type,
+            'license_plate_number': brta_record.license_plate_number,
+            'driving_license_number': brta_record.driving_license_number
+        }), 200
+    else:
+        return jsonify({'message': 'Data not found for the provided NID'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True, host="127.0.0.1", port=5000)
