@@ -82,80 +82,91 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
   }
 
   void _showRegisterSpaceDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Register Parking Space'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: _spotIdController,
-                  decoration: InputDecoration(labelText: 'Spot ID'),
-                ),
-                TextField(
-                  controller: _gpsController,
-                  decoration: InputDecoration(labelText: 'GPS Coordinates'),
-                ),
-                TextField(
-                  controller: _addressController,
-                  decoration: InputDecoration(labelText: 'Address'),
-                ),
-                TextField(
-                  controller: _pricingController,
-                  decoration: InputDecoration(labelText: 'Pricing'),
-                  keyboardType: TextInputType.number,
-                ),
-                Row(
-                  children: [
-                    Text('EV Charging'),
-                    Switch(
-                      value: _evCharging,
-                      onChanged: (value) {
-                        setState(() {
-                          _evCharging = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text('Surveillance'),
-                    Switch(
-                      value: _surveillance,
-                      onChanged: (value) {
-                        setState(() {
-                          _surveillance = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
+  bool localEvCharging = _evCharging;
+  bool localSurveillance = _surveillance;
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text('Register Parking Space'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: _spotIdController,
+                    decoration: InputDecoration(labelText: 'Spot ID'),
+                  ),
+                  TextField(
+                    controller: _gpsController,
+                    decoration: InputDecoration(labelText: 'GPS Coordinates'),
+                  ),
+                  TextField(
+                    controller: _addressController,
+                    decoration: InputDecoration(labelText: 'Address'),
+                  ),
+                  TextField(
+                    controller: _pricingController,
+                    decoration: InputDecoration(labelText: 'Pricing'),
+                    keyboardType: TextInputType.number,
+                  ),
+                  Row(
+                    children: [
+                      Text('EV Charging'),
+                      Switch(
+                        value: localEvCharging,
+                        onChanged: (value) {
+                          setState(() {
+                            localEvCharging = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Surveillance'),
+                      Switch(
+                        value: localSurveillance,
+                        onChanged: (value) {
+                          setState(() {
+                            localSurveillance = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                submitParkingSpot();
-              },
-              child: Text('Submit'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _evCharging = localEvCharging;
+                    _surveillance = localSurveillance;
+                  });
+                  Navigator.pop(context);
+                  submitParkingSpot();
+                },
+                child: Text('Submit'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
