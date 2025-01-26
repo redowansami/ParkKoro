@@ -13,20 +13,16 @@ from datetime import timedelta
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
-# Create the Flask app
 app = create_app()
 
-# Initialize BRTA database session
 brta_engine = create_engine(app.config['SQLALCHEMY_BINDS']['brta'], echo=True)
 BrtaSession = sessionmaker(bind=brta_engine)
 brta_session = scoped_session(BrtaSession)
 
-# Initialize database
 @app.before_request
 def create_tables():
     pass
 
-# Routes
 @app.route('/', methods=['GET'])
 def home():
     return "Backend is working with a single ParkingSpot table!"
@@ -40,25 +36,23 @@ def login_route():
     return login()
 
 @app.route('/logout', methods=['POST'])
-@login_required  # Protect the route with login_required
+@login_required  
 def logout_route():
-    logout_user()  # Log out the user using Flask-Login
+    logout_user() 
     return jsonify({'message': 'Logged out successfully'}), 200
 
 
-@app.route('/add_parking_spot', methods=['POST'])  # Ensure POST is allowed
+@app.route('/add_parking_spot', methods=['POST']) 
 def add_parking_spot():
     try:
         data = request.get_json()
-        print('Received payload:', data)  # Debugging
+        print('Received payload:', data)  
 
-        # Validate required fields
         required_fields = ['spot_id', 'owner_id', 'vehicle_type', 'location', 'gps_coordinates', 'price']
         for field in required_fields:
             if field not in data:
                 return jsonify({'message': f'Missing required field: {field}'}), 400
 
-        # Create a new parking spot
         new_spot = ParkingSpotModel(
             spot_id=data['spot_id'],
             owner_id=data['owner_id'],
@@ -83,10 +77,8 @@ def add_parking_spot():
 @app.route('/unverified_parking_spots', methods=['GET'])
 def unverified_parking_spots_route():
     try:
-        # Fetch unverified parking spots from the database
         unverified_spots = ParkingSpot.query.filter_by(verified=False).all()
 
-        # Convert the list of ParkingSpot objects to a list of dictionaries
         spots_list = [{
             'id': spot.id,
             'spot_id': spot.spot_id,
@@ -102,7 +94,6 @@ def unverified_parking_spots_route():
             'availability_status': spot.availability_status
         } for spot in unverified_spots]
 
-        # Return the list as a JSON response
         return jsonify(spots_list), 200
     except Exception as e:
         return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
@@ -111,21 +102,20 @@ def unverified_parking_spots_route():
 def review_parking_spot(spot_id):
     try:
         data = request.get_json()
-        action = data.get('action')  # Ensure this is "accept" or "delete"
-
-        # Fetch the parking spot by ID
+        action = data.get('action')
+       
         spot = ParkingSpot.query.get(spot_id)
         if not spot:
             return jsonify({'message': 'Parking spot not found.'}), 404
 
         if action == 'accept':
-            # Mark the spot as verified
-            spot.verified = True  # Update the verified field
+            
+            spot.verified = True  
             db.session.commit()
             return jsonify({'message': 'Parking spot approved.'}), 200
 
         elif action == 'delete':
-            # Delete the spot from the database
+            
             db.session.delete(spot)
             db.session.commit()
             return jsonify({'message': 'Parking spot deleted.'}), 200
