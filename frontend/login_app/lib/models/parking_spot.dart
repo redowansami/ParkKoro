@@ -1,65 +1,28 @@
-// class ParkingSpot {
-//   String spotID;
-//   String gpsCoordinates;
-//   String address;
-//   double pricing;
-//   bool availabilityStatus;
-//   bool evChargingAvailability;
-//   bool surveillanceAvailability;
-
-//   ParkingSpot({
-//     required this.spotID,
-//     required this.gpsCoordinates,
-//     required this.address,
-//     required this.pricing,
-//     required this.availabilityStatus,
-//     required this.evChargingAvailability,
-//     required this.surveillanceAvailability,
-//   });
-
-//   String viewAvailability() {
-//     return availabilityStatus ? "Available" : "Unavailable";
-//   }
-
-//   Map<String, dynamic> getDetails() {
-//     return {
-//       'Spot ID': spotID,
-//       'GPS Coordinates': gpsCoordinates,
-//       'Address': address,
-//       'Pricing': pricing,
-//       'Availability': availabilityStatus,
-//       'EV Charging': evChargingAvailability,
-//       'Surveillance': surveillanceAvailability,
-//     };
-//   }
-
-//   void integrateMapLocation() {
-//     // Logic for map integration
-//   }
-
-//   void viewFeedback() {
-//     // Logic to fetch and display feedback
-//   }
-// }
-
-// lib/models/parking_spot.dart
 class ParkingSpot {
   String spotID;
+  String ownerID;
+  String? adminID;
+  String vehicleType;
+  String location;
   String gpsCoordinates;
-  String address;
-  double pricing;
+  int price;
+  bool evCharging;
+  bool surveillance;
+  String cancellationPolicy;
   bool availabilityStatus;
-  bool evChargingAvailability;
-  bool surveillanceAvailability;
 
   ParkingSpot({
     required this.spotID,
+    required this.ownerID,
+    this.adminID,
+    required this.vehicleType,
+    required this.location,
     required this.gpsCoordinates,
-    required this.address,
-    required this.pricing,
+    required this.price,
+    required this.evCharging,
+    required this.surveillance,
+    required this.cancellationPolicy,
     required this.availabilityStatus,
-    required this.evChargingAvailability,
-    required this.surveillanceAvailability,
   });
 
   String viewAvailability() {
@@ -69,24 +32,32 @@ class ParkingSpot {
   Map<String, dynamic> toJson() {
     return {
       'spot_id': spotID,
+      'owner_id': ownerID,
+      'admin_id': adminID,
+      'vehicle_type': vehicleType,
+      'location': location,
       'gps_coordinates': gpsCoordinates,
-      'address': address,
-      'pricing': pricing,
+      'price': price,
+      'ev_charging': evCharging,
+      'surveillance': surveillance,
+      'cancellation_policy': cancellationPolicy,
       'availability_status': availabilityStatus,
-      'ev_charging_availability': evChargingAvailability,
-      'surveillance_availability': surveillanceAvailability,
     };
   }
 
   static ParkingSpot fromJson(Map<String, dynamic> json) {
     return ParkingSpot(
       spotID: json['spot_id'],
+      ownerID: json['owner_id'],
+      adminID: json['admin_id'],
+      vehicleType: json['vehicle_type'],
+      location: json['location'],
       gpsCoordinates: json['gps_coordinates'],
-      address: json['address'],
-      pricing: json['pricing'],
+      price: json['price'],
+      evCharging: json['ev_charging'],
+      surveillance: json['surveillance'],
+      cancellationPolicy: json['cancellation_policy'],
       availabilityStatus: json['availability_status'],
-      evChargingAvailability: json['ev_charging_availability'],
-      surveillanceAvailability: json['surveillance_availability'],
     );
   }
 }

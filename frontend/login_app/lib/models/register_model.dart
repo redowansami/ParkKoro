@@ -1,4 +1,3 @@
-// lib/models/register_model.dart
 class RegisterModel {
   String nid = '';
   String username = '';

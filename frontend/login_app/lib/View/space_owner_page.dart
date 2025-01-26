@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../controllers/space_owner_controller.dart';
-import '../models/space_owner_model.dart';
+import '../controllers/parking_spot_controller.dart';
+import '../models/parking_spot.dart'; // Updated to use ParkingSpot model
 
 class SpaceOwnerPage extends StatefulWidget {
   final String username;
@@ -12,8 +12,27 @@ class SpaceOwnerPage extends StatefulWidget {
 }
 
 class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
-  final SpaceOwnerController _controller = SpaceOwnerController();
-  final SpaceOwnerModel _model = SpaceOwnerModel();
+  final ParkingSpotController _controller = ParkingSpotController();
+  late ParkingSpot _model; // Declare _model as late to initialize it in initState
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize _model with the username as ownerID
+    _model = ParkingSpot(
+      spotID: '',
+      ownerID: widget.username, // Set ownerID to the username
+      adminID: null,
+      vehicleType: '',
+      location: '',
+      gpsCoordinates: '',
+      price: 0,
+      evCharging: false,
+      surveillance: false,
+      cancellationPolicy: 'Strict',
+      availabilityStatus: true,
+    );
+  }
 
   Future<void> _submitParkingSpot() async {
     try {
@@ -22,12 +41,14 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
         const SnackBar(content: Text('Parking spot submitted for review.')),
       );
       setState(() {
-        _model.spotId = '';
+        _model.spotID = '';
         _model.gpsCoordinates = '';
-        _model.address = '';
-        _model.pricing = 0.0;
+        _model.location = '';
+        _model.price = 0;
         _model.evCharging = false;
         _model.surveillance = false;
+        _model.vehicleType = '';
+        _model.cancellationPolicy = 'Strict';
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -39,88 +60,122 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
   void _showRegisterSpaceDialog() {
     bool localEvCharging = _model.evCharging;
     bool localSurveillance = _model.surveillance;
+    String localCancellationPolicy = _model.cancellationPolicy;
 
     showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text('Register Parking Space'),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+  context: context,
+  builder: (context) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return AlertDialog(
+          title: Text('Register Parking Space'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  onChanged: (value) => _model.spotID = value,
+                  decoration: InputDecoration(labelText: 'Spot ID'),
+                ),
+                TextField(
+                  onChanged: (value) => _model.gpsCoordinates = value,
+                  decoration: InputDecoration(labelText: 'GPS Coordinates'),
+                ),
+                TextField(
+                  onChanged: (value) => _model.location = value,
+                  decoration: InputDecoration(labelText: 'Location'),
+                ),
+                TextField(
+                  onChanged: (value) => _model.location = value,
+                  decoration: InputDecoration(labelText: 'Address'),
+                ),
+                TextField(
+                  onChanged: (value) => _model.price = int.parse(value),
+                  decoration: InputDecoration(labelText: 'Price'),
+                  keyboardType: TextInputType.number,
+                ),
+                TextField(
+                  onChanged: (value) => _model.vehicleType = value,
+                  decoration: InputDecoration(labelText: 'Vehicle Type'),
+                ),
+                Row(
                   children: [
-                    TextField(
-                      onChanged: (value) => _model.spotId = value,
-                      decoration: InputDecoration(labelText: 'Spot ID'),
-                    ),
-                    TextField(
-                      onChanged: (value) => _model.gpsCoordinates = value,
-                      decoration: InputDecoration(labelText: 'GPS Coordinates'),
-                    ),
-                    TextField(
-                      onChanged: (value) => _model.address = value,
-                      decoration: InputDecoration(labelText: 'Address'),
-                    ),
-                    TextField(
-                      onChanged: (value) => _model.pricing = double.parse(value),
-                      decoration: InputDecoration(labelText: 'Pricing'),
-                      keyboardType: TextInputType.number,
-                    ),
-                    Row(
-                      children: [
-                        Text('EV Charging'),
-                        Switch(
-                          value: localEvCharging,
-                          onChanged: (value) {
-                            setState(() {
-                              localEvCharging = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('Surveillance'),
-                        Switch(
-                          value: localSurveillance,
-                          onChanged: (value) {
-                            setState(() {
-                              localSurveillance = value;
-                            });
-                          },
-                        ),
-                      ],
+                    Text('EV Charging'),
+                    Switch(
+                      value: localEvCharging,
+                      onChanged: (value) {
+                        setState(() {
+                          localEvCharging = value;
+                        });
+                      },
                     ),
                   ],
                 ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel'),
+                Row(
+                  children: [
+                    Text('Surveillance'),
+                    Switch(
+                      value: localSurveillance,
+                      onChanged: (value) {
+                        setState(() {
+                          localSurveillance = value;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
+                DropdownButton<String>(
+                  value: localCancellationPolicy,
+                  onChanged: (String? newValue) {
                     setState(() {
-                      _model.evCharging = localEvCharging;
-                      _model.surveillance = localSurveillance;
+                      localCancellationPolicy = newValue!;
                     });
-                    Navigator.pop(context);
-                    _submitParkingSpot();
                   },
-                  child: Text('Submit'),
+                  items: <String>['Strict', 'Moderate', 'Flexible']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                // Auto-filled, non-editable TextField for ownerID
+                TextField(
+                  readOnly: true, // Make the field non-editable
+                  controller: TextEditingController(text: _model.ownerID), // Auto-fill with ownerID
+                  decoration: InputDecoration(
+                    labelText: 'Owner ID',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ],
-            );
-          },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _model.evCharging = localEvCharging;
+                  _model.surveillance = localSurveillance;
+                  _model.cancellationPolicy = localCancellationPolicy;
+                });
+                Navigator.pop(context);
+                _submitParkingSpot();
+              },
+              child: Text('Submit'),
+            ),
+          ],
         );
       },
     );
+  },
+);
   }
 
   @override

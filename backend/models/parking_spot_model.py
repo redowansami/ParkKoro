@@ -1,12 +1,21 @@
+from sqlalchemy.dialects.postgresql import ENUM
 from __init__ import db
 
+# Define the ENUM type with a name
+cancellation_policy_enum = ENUM('Strict', 'Moderate', 'Flexible', name='cancellation_policy_enum', create_type=True)
+
 class ParkingSpot(db.Model):
+    __tablename__ = 'parking_spot'
     id = db.Column(db.Integer, primary_key=True)
-    spot_id = db.Column(db.String(50), nullable=False)
-    gps_coordinates = db.Column(db.String(100), nullable=False)
-    address = db.Column(db.String(255), nullable=False)
-    pricing = db.Column(db.Float, nullable=False)
+    spot_id = db.Column(db.String(45), nullable=False)  
+    owner_id = db.Column(db.String(80), db.ForeignKey('user.username'), nullable=False)
+    admin_id = db.Column(db.String(80), db.ForeignKey('user.username'), nullable=True)
+    vehicle_type = db.Column(db.String(45), nullable=False)
+    location = db.Column(db.String(45), nullable=False)
+    gps_coordinates = db.Column(db.String(45), nullable=False)  # Will change to use POINT type
+    price = db.Column(db.Integer, nullable=False) 
+    ev_charging = db.Column(db.Boolean, default=False) 
+    surveillance = db.Column(db.Boolean, default=False)
+    cancellation_policy = db.Column(cancellation_policy_enum, nullable=False) 
     availability_status = db.Column(db.Boolean, default=True)
-    ev_charging_availability = db.Column(db.Boolean, default=False)
-    surveillance_availability = db.Column(db.Boolean, default=False)
-    verified = db.Column(db.Boolean, default=False)  # True if approved by admin, False otherwise
+    verified = db.Column(db.Boolean, default=False)

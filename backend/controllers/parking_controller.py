@@ -1,18 +1,30 @@
 from flask import request, jsonify
 from models.parking_spot_model import ParkingSpot
 from __init__ import db
+from flask_login import current_user
+
 
 def add_parking_spot():
     data = request.get_json()
+    print(data)
+    
+    owner_id = current_user.username 
+    
+    admin_id = "admin_username"  
     new_spot = ParkingSpot(
         spot_id=data.get('spot_id'),
+        owner_id=owner_id, 
+        admin_id=admin_id, 
+        vehicle_type=data.get('vehicle_type'),
+        location=data.get('location'),
         gps_coordinates=data.get('gps_coordinates'),
-        address=data.get('address'),
-        pricing=data.get('pricing'),
-        availability_status=data.get('availability_status', True),
-        ev_charging_availability=data.get('ev_charging_availability', False),
-        surveillance_availability=data.get('surveillance_availability', False)
+        price=data.get('price'),
+        ev_charging=data.get('ev_charging', False),
+        surveillance=data.get('surveillance', False),
+        cancellation_policy=data.get('cancellation_policy'),
+        availability_status=data.get('availability_status', True)
     )
+
     db.session.add(new_spot)
     db.session.commit()
     return jsonify({'message': 'Parking spot submitted for review.'}), 201
@@ -22,12 +34,16 @@ def unverified_parking_spots():
     spots_list = [{
         'id': spot.id,
         'spot_id': spot.spot_id,
+        'owner_id': spot.owner_id,
+        'admin_id': spot.admin_id,
+        'vehicle_type': spot.vehicle_type,
+        'location': spot.location,
         'gps_coordinates': spot.gps_coordinates,
-        'address': spot.address,
-        'pricing': spot.pricing,
-        'availability_status': spot.availability_status,
-        'ev_charging_availability': spot.ev_charging_availability,
-        'surveillance_availability': spot.surveillance_availability
+        'price': spot.price,
+        'ev_charging': spot.ev_charging,
+        'surveillance': spot.surveillance,
+        'cancellation_policy': spot.cancellation_policy,
+        'availability_status': spot.availability_status
     } for spot in unverified_spots]
     return jsonify(spots_list), 200
 
@@ -57,11 +73,15 @@ def verified_parking_spots():
     spots_list = [{
         'id': spot.id,
         'spot_id': spot.spot_id,
+        'owner_id': spot.owner_id,
+        'admin_id': spot.admin_id,
+        'vehicle_type': spot.vehicle_type,
+        'location': spot.location,
         'gps_coordinates': spot.gps_coordinates,
-        'address': spot.address,
-        'pricing': spot.pricing,
-        'availability_status': spot.availability_status,
-        'ev_charging_availability': spot.ev_charging_availability,
-        'surveillance_availability': spot.surveillance_availability
+        'price': spot.price,
+        'ev_charging': spot.ev_charging,
+        'surveillance': spot.surveillance,
+        'cancellation_policy': spot.cancellation_policy,
+        'availability_status': spot.availability_status
     } for spot in verified_spots]
     return jsonify(spots_list), 200

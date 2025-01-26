@@ -1,8 +1,6 @@
-// lib/controllers/space_owner_controller.dart
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../models/space_owner_model.dart'; // Import the RegisterModel class
-
+import '../models/space_owner_model.dart';
 
 class SpaceOwnerController {
   Future<void> submitParkingSpot(SpaceOwnerModel model) async {

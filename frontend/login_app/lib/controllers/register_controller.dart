@@ -1,4 +1,3 @@
-// lib/controllers/register_controller.dart
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/register_model.dart'; // Import the RegisterModel class

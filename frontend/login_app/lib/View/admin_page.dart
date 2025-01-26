@@ -35,19 +35,19 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
 
-  Future<void> _reviewSpot(int id, bool approve) async {
-    try {
-      await _controller.reviewSpot(id, approve);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Action completed successfully.')),
-      );
-      _fetchUnverifiedSpots(); // Refresh the list
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to complete action: $e')),
-      );
-    }
+  Future<void> _reviewSpot(int id, String action) async {
+  try {
+    await _controller.reviewSpot(id, action); // Send "accept" or "delete"
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Action completed successfully.')),
+    );
+    _fetchUnverifiedSpots(); // Refresh the list
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to complete action: $e')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -124,18 +124,18 @@ class _AdminPageState extends State<AdminPage> {
                 child: ListTile(
                   title: Text('Spot ID: ${spot['spot_id']}'),
                   subtitle: Text(
-                    'Address: ${spot['address']}\nPricing: \$${spot['pricing']}',
+                    'Address: ${spot['location']}\nPricing: \$${spot['price']}',
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         icon: Icon(Icons.check, color: Colors.green),
-                        onPressed: () => _reviewSpot(spot['id'], true), // Approve
+                        onPressed: () => _reviewSpot(spot['id'], "accept"), // Approve
                       ),
                       IconButton(
                         icon: Icon(Icons.close, color: Colors.red),
-                        onPressed: () => _reviewSpot(spot['id'], false), // Reject
+                        onPressed: () => _reviewSpot(spot['id'], "delete"), // Reject
                       ),
                     ],
                   ),

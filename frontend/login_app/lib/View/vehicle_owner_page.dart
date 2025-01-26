@@ -275,7 +275,7 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    spot.address,
+                                    spot.location,
                                     style: const TextStyle(
                                       fontSize: 16,
                                       color: Colors.black87,
@@ -291,7 +291,7 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                                     color: Colors.grey),
                                 const SizedBox(width: 8),
                                 Text(
-                                  '\$${spot.pricing}/hour',
+                                  '\$${spot.price}/hour',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.black87,

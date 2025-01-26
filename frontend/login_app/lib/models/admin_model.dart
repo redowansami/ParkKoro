@@ -1,4 +1,3 @@
-// lib/models/admin_model.dart
 class AdminModel {
   String username;
   List<dynamic> unverifiedSpots = [];
