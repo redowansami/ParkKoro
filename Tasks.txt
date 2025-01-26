@@ -1,3 +1,4 @@
 1. Integrate Map
-2. Add logout option
-3. Design Dashboard
+
+2. Repair the Existing issues
+3. Add Booking functionality
