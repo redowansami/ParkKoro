@@ -3,6 +3,8 @@ import '../controllers/register_controller.dart';
 import '../models/register_model.dart';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -49,14 +51,14 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register')),
+      appBar: AppBar(title: const Text('Register')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (_model.userType.isEmpty) ...[
-              Text('Select User Type:'),
+              const Text('Select User Type:'),
               ListTile(
                 title: const Text('Vehicle Owner'),
                 leading: Radio<String>(
@@ -103,70 +105,70 @@ class _RegisterPageState extends State<RegisterPage> {
             if (_nidStepVisible) ...[
               TextField(
                 onChanged: (value) => _model.nid = value,
-                decoration: InputDecoration(labelText: 'Enter NID'),
+                decoration: const InputDecoration(labelText: 'Enter NID'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _fetchVehicleOwnerData,
-                child: Text('Submit NID'),
+                child: const Text('Submit NID'),
               ),
             ],
             if (_formVisible) ...[
               if (_model.userType == 'VehicleOwner') ...[
                 TextField(
                   controller: TextEditingController(text: _model.nid),
-                  decoration: InputDecoration(labelText: 'NID'),
+                  decoration: const InputDecoration(labelText: 'NID'),
                   readOnly: true,
                 ),
                 TextField(
                   controller: TextEditingController(text: _model.email),
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: 'Email'),
                   readOnly: true,
                 ),
                 TextField(
                   controller: TextEditingController(text: _model.phone),
-                  decoration: InputDecoration(labelText: 'Phone Number'),
+                  decoration: const InputDecoration(labelText: 'Phone Number'),
                   readOnly: true,
                 ),
                 TextField(
                   controller: TextEditingController(text: _model.carType),
-                  decoration: InputDecoration(labelText: 'Car Type'),
+                  decoration: const InputDecoration(labelText: 'Car Type'),
                   readOnly: true,
                 ),
                 TextField(
                   controller: TextEditingController(text: _model.licensePlate),
-                  decoration: InputDecoration(labelText: 'License Plate Number'),
+                  decoration: const InputDecoration(labelText: 'License Plate Number'),
                   readOnly: true,
                 ),
                 TextField(
                   controller: TextEditingController(text: _model.drivingLicense),
-                  decoration: InputDecoration(labelText: 'Driving License Number'),
+                  decoration: const InputDecoration(labelText: 'Driving License Number'),
                   readOnly: true,
                 ),
               ],
               TextField(
                 onChanged: (value) => _model.username = value,
-                decoration: InputDecoration(labelText: 'Username'),
+                decoration: const InputDecoration(labelText: 'Username'),
               ),
               TextField(
                 onChanged: (value) => _model.password = value,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
               ),
               if (_model.userType != 'VehicleOwner') ...[
                 TextField(
                   onChanged: (value) => _model.email = value,
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: 'Email'),
                 ),
                 TextField(
                   onChanged: (value) => _model.phone = value,
-                  decoration: InputDecoration(labelText: 'Phone Number'),
+                  decoration: const InputDecoration(labelText: 'Phone Number'),
                 ),
               ],
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _registerUser,
-                child: Text('Register'),
+                child: const Text('Register'),
               ),
             ],
           ],
