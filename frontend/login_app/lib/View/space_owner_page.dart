@@ -68,39 +68,39 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
     return StatefulBuilder(
       builder: (context, setState) {
         return AlertDialog(
-          title: Text('Register Parking Space'),
+          title: const Text('Register Parking Space'),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   onChanged: (value) => _model.spotID = value,
-                  decoration: InputDecoration(labelText: 'Spot ID'),
+                  decoration: const InputDecoration(labelText: 'Spot ID'),
                 ),
                 TextField(
                   onChanged: (value) => _model.gpsCoordinates = value,
-                  decoration: InputDecoration(labelText: 'GPS Coordinates'),
+                  decoration: const InputDecoration(labelText: 'GPS Coordinates'),
                 ),
                 TextField(
                   onChanged: (value) => _model.location = value,
-                  decoration: InputDecoration(labelText: 'Location'),
+                  decoration: const InputDecoration(labelText: 'Location'),
                 ),
                 TextField(
                   onChanged: (value) => _model.location = value,
-                  decoration: InputDecoration(labelText: 'Address'),
+                  decoration: const InputDecoration(labelText: 'Address'),
                 ),
                 TextField(
                   onChanged: (value) => _model.price = int.parse(value),
-                  decoration: InputDecoration(labelText: 'Price'),
+                  decoration: const InputDecoration(labelText: 'Price'),
                   keyboardType: TextInputType.number,
                 ),
                 TextField(
                   onChanged: (value) => _model.vehicleType = value,
-                  decoration: InputDecoration(labelText: 'Vehicle Type'),
+                  decoration: const InputDecoration(labelText: 'Vehicle Type'),
                 ),
                 Row(
                   children: [
-                    Text('EV Charging'),
+                    const Text('EV Charging'),
                     Switch(
                       value: localEvCharging,
                       onChanged: (value) {
@@ -113,7 +113,7 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
                 ),
                 Row(
                   children: [
-                    Text('Surveillance'),
+                    const Text('Surveillance'),
                     Switch(
                       value: localSurveillance,
                       onChanged: (value) {
@@ -143,7 +143,7 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
                 TextField(
                   readOnly: true, // Make the field non-editable
                   controller: TextEditingController(text: _model.ownerID), // Auto-fill with ownerID
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Owner ID',
                     border: OutlineInputBorder(),
                   ),
@@ -156,7 +156,7 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -168,7 +168,7 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
                 Navigator.pop(context);
                 _submitParkingSpot();
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         );
@@ -182,10 +182,10 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Space Owner Dashboard'),
+        title: const Text('Space Owner Dashboard'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () {
               Navigator.pop(context); // Log out functionality
             },
@@ -199,9 +199,9 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
           children: [
             Text(
               'Welcome, ${widget.username}!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildSection(
               context,
               icon: Icons.add_location_alt,
@@ -229,10 +229,10 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
         leading: Icon(icon, size: 40),
         title: Text(
           title,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(description),
-        trailing: Icon(Icons.arrow_forward),
+        trailing: const Icon(Icons.arrow_forward),
         onTap: onTap,
       ),
     );

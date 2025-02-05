@@ -39,7 +39,7 @@ class _AdminPageState extends State<AdminPage> {
   try {
     await _controller.reviewSpot(id, action); // Send "accept" or "delete"
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Action completed successfully.')),
+      const SnackBar(content: Text('Action completed successfully.')),
     );
     _fetchUnverifiedSpots(); // Refresh the list
   } catch (e) {
@@ -53,10 +53,10 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Dashboard'),
+        title: const Text('Admin Dashboard'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () {
               Navigator.pop(context); // Log out functionality
             },
@@ -70,9 +70,9 @@ class _AdminPageState extends State<AdminPage> {
           children: [
             Text(
               'Welcome, Admin ${_model.username}!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             // View Requests Section
             _buildSection(
               context,
@@ -101,10 +101,10 @@ class _AdminPageState extends State<AdminPage> {
         leading: Icon(icon, size: 40),
         title: Text(
           title,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(description),
-        trailing: Icon(Icons.arrow_forward),
+        trailing: const Icon(Icons.arrow_forward),
         onTap: onTap,
       ),
     );
@@ -115,7 +115,7 @@ class _AdminPageState extends State<AdminPage> {
       context,
       MaterialPageRoute(
         builder: (context) => Scaffold(
-          appBar: AppBar(title: Text('Review Parking Spots')),
+          appBar: AppBar(title: const Text('Review Parking Spots')),
           body: ListView.builder(
             itemCount: _model.unverifiedSpots.length,
             itemBuilder: (context, index) {
@@ -130,11 +130,11 @@ class _AdminPageState extends State<AdminPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.check, color: Colors.green),
+                        icon: const Icon(Icons.check, color: Colors.green),
                         onPressed: () => _reviewSpot(spot['id'], "accept"), // Approve
                       ),
                       IconButton(
-                        icon: Icon(Icons.close, color: Colors.red),
+                        icon: const Icon(Icons.close, color: Colors.red),
                         onPressed: () => _reviewSpot(spot['id'], "delete"), // Reject
                       ),
                     ],
