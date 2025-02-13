@@ -1,4 +1,7 @@
 1. Integrate Map
 
-2. Repair the Existing issues
+2. Repair the Existing issues (Added from Sami Branch)
+- Parking Spot should have Longitude and Latitude (Update frontend, banckend and DB)
+- Primary key in DB is by default Id
+
 3. Add Booking functionality
