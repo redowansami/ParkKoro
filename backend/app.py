@@ -6,6 +6,7 @@ from models.user_model import User
 from models.parking_spot_model import ParkingSpot
 from models.parking_spot_model import ParkingSpot as ParkingSpotModel
 from models.brta_data_model import BrtaData
+from controllers.booking_controller import create_booking, cancel_booking, view_booking_details, update_availability
 from controllers.auth_controller import register, login
 from controllers.parking_controller import add_parking_spot, unverified_parking_spots, review_parking_spot, verified_parking_spots
 from __init__ import db, bcrypt, jwt, create_app, login_manager  # Import login_manager
@@ -155,6 +156,24 @@ def brta_route():
         return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
     finally:
         brta_session.remove()
+
+#booking routes
+
+@app.route('/api/bookings', methods=['POST'])
+def create_booking_route():
+    return create_booking()
+
+@app.route('/api/bookings/<booking_id>/cancel', methods=['PUT'])
+def cancel_booking_route(booking_id):
+    return cancel_booking(booking_id)
+
+@app.route('/api/bookings/<booking_id>', methods=['GET'])
+def view_booking_details_route(booking_id):
+    return view_booking_details(booking_id)
+
+@app.route('/api/parking_spots/<spot_id>/availability', methods=['PUT'])
+def update_availability_route(spot_id):
+    return update_availability(spot_id)
 
 if __name__ == '__main__':
     app.run(debug=True, host="127.0.0.1", port=5000)
