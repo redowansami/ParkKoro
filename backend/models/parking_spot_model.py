@@ -6,8 +6,8 @@ cancellation_policy_enum = ENUM('Strict', 'Moderate', 'Flexible', name='cancella
 
 class ParkingSpot(db.Model):
     __tablename__ = 'parking_spot'
-    id = db.Column(db.Integer, primary_key=True)
-    spot_id = db.Column(db.String(45), nullable=False)  
+    
+    spot_id = db.Column(db.String(45), primary_key=True, nullable=False)  # Set as primary key
     owner_id = db.Column(db.String(80), db.ForeignKey('user.username'), nullable=False)
     admin_id = db.Column(db.String(80), db.ForeignKey('user.username'), nullable=True)
     vehicle_type = db.Column(db.String(45), nullable=False)

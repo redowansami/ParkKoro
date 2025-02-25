@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../controllers/admin_controller.dart';
 import '../models/admin_model.dart';
+import 'login_page.dart';
 
 class AdminPage extends StatefulWidget {
   final String username;
@@ -35,30 +36,36 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
 
-  Future<void> _reviewSpot(int id, String action) async {
-  try {
-    await _controller.reviewSpot(id, action); // Send "accept" or "delete"
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Action completed successfully.')),
-    );
-    _fetchUnverifiedSpots(); // Refresh the list
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to complete action: $e')),
-    );
+  Future<void> _reviewSpot(String spotId, String action) async {
+    try {
+      await _controller.reviewSpot(spotId, action); // Send "accept" or "delete"
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Action completed successfully.')),
+      );
+      _fetchUnverifiedSpots(); // Refresh the list
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to complete action: $e')),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: const Text('Admin Dashboard'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              Navigator.pop(context); // Log out functionality
+              // Replace the entire navigation stack with login page
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                (route) => false, // This will remove all routes from the stack
+              );
             },
           ),
         ],
@@ -131,11 +138,11 @@ class _AdminPageState extends State<AdminPage> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.check, color: Colors.green),
-                        onPressed: () => _reviewSpot(spot['id'], "accept"), // Approve
+                        onPressed: () => _reviewSpot(spot['spot_id'], "accept"), // Approve
                       ),
                       IconButton(
                         icon: const Icon(Icons.close, color: Colors.red),
-                        onPressed: () => _reviewSpot(spot['id'], "delete"), // Reject
+                        onPressed: () => _reviewSpot(spot['spot_id'], "delete"), // Reject
                       ),
                     ],
                   ),

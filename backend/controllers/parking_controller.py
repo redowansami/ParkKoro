@@ -8,9 +8,9 @@ def add_parking_spot():
     data = request.get_json()
     print(data)
     
-    owner_id = current_user.username 
-    
+    owner_id = current_user.username  
     admin_id = "admin_username"  
+
     new_spot = ParkingSpot(
         spot_id=data.get('spot_id'),
         owner_id=owner_id, 
@@ -22,17 +22,18 @@ def add_parking_spot():
         ev_charging=data.get('ev_charging', False),
         surveillance=data.get('surveillance', False),
         cancellation_policy=data.get('cancellation_policy'),
-        availability_status=data.get('availability_status', True)
+        availability_status=data.get('availability_status', True),
+        verified=False  # Default to not verified
     )
 
     db.session.add(new_spot)
     db.session.commit()
     return jsonify({'message': 'Parking spot submitted for review.'}), 201
 
+
 def unverified_parking_spots():
     unverified_spots = ParkingSpot.query.filter_by(verified=False).all()
     spots_list = [{
-        'id': spot.id,
         'spot_id': spot.spot_id,
         'owner_id': spot.owner_id,
         'admin_id': spot.admin_id,
@@ -47,11 +48,12 @@ def unverified_parking_spots():
     } for spot in unverified_spots]
     return jsonify(spots_list), 200
 
+
 def review_parking_spot(spot_id):
     data = request.get_json()
     action = data.get('action')  # 'approve' or 'reject'
 
-    spot = ParkingSpot.query.filter_by(id=spot_id).first()
+    spot = ParkingSpot.query.filter_by(spot_id=spot_id).first()
     if not spot:
         return jsonify({'message': 'Parking spot not found.'}), 404
 
@@ -68,10 +70,10 @@ def review_parking_spot(spot_id):
     else:
         return jsonify({'message': 'Invalid action.'}), 400
 
+
 def verified_parking_spots():
     verified_spots = ParkingSpot.query.filter_by(verified=True).all()
     spots_list = [{
-        'id': spot.id,
         'spot_id': spot.spot_id,
         'owner_id': spot.owner_id,
         'admin_id': spot.admin_id,

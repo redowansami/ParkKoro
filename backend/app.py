@@ -6,6 +6,7 @@ from models.user_model import User
 from models.parking_spot_model import ParkingSpot
 from models.parking_spot_model import ParkingSpot as ParkingSpotModel
 from models.brta_data_model import BrtaData
+from controllers.payment_controller import process_payment, initiate_refund, get_payment_details
 from controllers.booking_controller import create_booking, cancel_booking, view_booking_details, update_availability
 from controllers.auth_controller import register, login
 from controllers.parking_controller import add_parking_spot, unverified_parking_spots, review_parking_spot, verified_parking_spots
@@ -76,47 +77,41 @@ def add_parking_spot():
         return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
 
 @app.route('/unverified_parking_spots', methods=['GET'])
-def unverified_parking_spots_route():
-    try:
-        unverified_spots = ParkingSpot.query.filter_by(verified=False).all()
+def unverified_parking_spots():
+    unverified_spots = ParkingSpot.query.filter_by(verified=False).all()
+    spots_list = [{
+        'spot_id': spot.spot_id,
+        'owner_id': spot.owner_id,
+        'admin_id': spot.admin_id,
+        'vehicle_type': spot.vehicle_type,
+        'location': spot.location,
+        'gps_coordinates': spot.gps_coordinates,
+        'price': spot.price,
+        'ev_charging': spot.ev_charging,
+        'surveillance': spot.surveillance,
+        'cancellation_policy': spot.cancellation_policy,
+        'availability_status': spot.availability_status
+    } for spot in unverified_spots]
+    return jsonify(spots_list), 200
 
-        spots_list = [{
-            'id': spot.id,
-            'spot_id': spot.spot_id,
-            'owner_id': spot.owner_id,
-            'admin_id': spot.admin_id,
-            'vehicle_type': spot.vehicle_type,
-            'location': spot.location,
-            'gps_coordinates': spot.gps_coordinates,
-            'price': spot.price,
-            'ev_charging': spot.ev_charging,
-            'surveillance': spot.surveillance,
-            'cancellation_policy': spot.cancellation_policy,
-            'availability_status': spot.availability_status
-        } for spot in unverified_spots]
 
-        return jsonify(spots_list), 200
-    except Exception as e:
-        return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
-
-@app.route('/review_parking_spot/<int:spot_id>', methods=['POST'])
+@app.route('/review_parking_spot/<spot_id>', methods=['POST'])  # spot_id is now a string
 def review_parking_spot(spot_id):
     try:
         data = request.get_json()
         action = data.get('action')
        
-        spot = ParkingSpot.query.get(spot_id)
+        # Query the ParkingSpot by the spot_id (string)
+        spot = ParkingSpot.query.filter_by(spot_id=spot_id).first()  # Use filter_by since spot_id is a string now
         if not spot:
             return jsonify({'message': 'Parking spot not found.'}), 404
 
         if action == 'accept':
-            
             spot.verified = True  
             db.session.commit()
             return jsonify({'message': 'Parking spot approved.'}), 200
 
         elif action == 'delete':
-            
             db.session.delete(spot)
             db.session.commit()
             return jsonify({'message': 'Parking spot deleted.'}), 200
@@ -174,6 +169,20 @@ def view_booking_details_route(booking_id):
 @app.route('/api/parking_spots/<spot_id>/availability', methods=['PUT'])
 def update_availability_route(spot_id):
     return update_availability(spot_id)
+
+#payment controller
+
+@app.route('/api/payments', methods=['POST'])
+def process_payment_route():
+    return process_payment()
+
+@app.route('/api/payments/<transaction_id>/refund', methods=['PUT'])
+def initiate_refund_route(transaction_id):
+    return initiate_refund(transaction_id)
+
+@app.route('/api/payments/<transaction_id>', methods=['GET'])
+def get_payment_details_route(transaction_id):
+    return get_payment_details(transaction_id)
 
 if __name__ == '__main__':
     app.run(debug=True, host="127.0.0.1", port=5000)
