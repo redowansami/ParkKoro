@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../controllers/parking_spot_controller.dart';
 import '../models/parking_spot.dart'; // Updated to use ParkingSpot model
+import 'login_page.dart';
 
 class SpaceOwnerPage extends StatefulWidget {
   final String username;
@@ -182,12 +183,18 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: const Text('Space Owner Dashboard'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              Navigator.pop(context); // Log out functionality
+              // Replace the entire navigation stack with login page
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                (route) => false, // This will remove all routes from the stack
+              );
             },
           ),
         ],

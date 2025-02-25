@@ -10,6 +10,7 @@ class ParkingSpot {
   bool surveillance;
   String cancellationPolicy;
   bool availabilityStatus;
+  bool verified; // Add this field
 
   ParkingSpot({
     required this.spotID,
@@ -23,6 +24,7 @@ class ParkingSpot {
     required this.surveillance,
     required this.cancellationPolicy,
     required this.availabilityStatus,
+    this.verified = false, // Default to false
   });
 
   String viewAvailability() {
@@ -42,6 +44,7 @@ class ParkingSpot {
       'surveillance': surveillance,
       'cancellation_policy': cancellationPolicy,
       'availability_status': availabilityStatus,
+      'verified': verified, // Include this in the JSON payload
     };
   }
 
@@ -58,6 +61,7 @@ class ParkingSpot {
       surveillance: json['surveillance'],
       cancellationPolicy: json['cancellation_policy'],
       availabilityStatus: json['availability_status'],
+      verified: json['verified'] ?? false, // Handle null case
     );
   }
 }
