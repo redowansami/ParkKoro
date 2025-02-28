@@ -3,6 +3,5 @@
 2. Repair the Existing issues
 - Parking Spot should have Longitude and Latitude (Update frontend, backend and DB)
 
-3. Add Booking and Payment functionality
-- Added in Backend
-- Frontend integration remaining
+3. Working on Booking and Payment functionality
+- Facing failure because of system enviroment
