@@ -31,4 +31,34 @@ class AdminController {
       throw Exception('Failed to complete action: $e');
     }
   }
+
+   // Fetch all users
+  Future<List<dynamic>> fetchAllUsers() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://127.0.0.1:5000/admin/users'),
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to fetch users');
+      }
+    } catch (e) {
+      throw Exception('Error fetching users: $e');
+    }
+  }
+
+  // Delete a user
+  Future<void> deleteUser(int userId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('http://127.0.0.1:5000/admin/users/$userId'),
+      );
+      if (response.statusCode != 200) {
+        throw Exception('Failed to delete user');
+      }
+    } catch (e) {
+      throw Exception('Error deleting user: $e');
+    }
+  }
 }
