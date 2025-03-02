@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/View/booking_page.dart';
 import '../controllers/parking_spot_controller.dart';
 import '../models/parking_spot.dart';
 import 'login_page.dart'; // Import the RegisterPage class
@@ -304,17 +305,14 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: spot.availabilityStatus
-                                    ? () {
-                                        // Implement booking functionality
-                                      }
-                                    : null,
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookingPage(spotId: spot.spotID, pricePerHour: spot.price.toDouble(),),
+                                    ),
+                                  );
+                                },
                                 child: const Text('Book Now'),
                               ),
                             ),
