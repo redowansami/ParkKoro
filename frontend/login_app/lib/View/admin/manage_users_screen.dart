@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../controllers/admin_controller.dart';
+import '../../controllers/admin_controller.dart';
 
 class ManageUsersScreen extends StatefulWidget {
   const ManageUsersScreen({super.key});

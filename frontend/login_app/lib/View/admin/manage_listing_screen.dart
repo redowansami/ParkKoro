@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../controllers/parking_spot_controller.dart';
-import '../models/parking_spot.dart';
+import '../../controllers/parking_spot_controller.dart';
+import '../../models/parking_spot.dart';
 
 class ManageListingsScreen extends StatefulWidget {
   const ManageListingsScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../controllers/admin_controller.dart';
-import '../models/admin_model.dart';
+import '../../controllers/admin_controller.dart';
+import '../../models/admin_model.dart';
 
 class ReviewRequestsScreen extends StatefulWidget {
   const ReviewRequestsScreen({super.key});
