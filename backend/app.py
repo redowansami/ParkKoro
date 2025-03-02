@@ -94,6 +94,16 @@ def unverified_parking_spots():
     } for spot in unverified_spots]
     return jsonify(spots_list), 200
 
+@app.route('/admin/parking_spots/<spot_id>', methods=['DELETE'])
+def delete_parking_spot(spot_id):
+    """Delete a parking spot by ID"""
+    spot = ParkingSpot.query.get(spot_id)
+    if not spot:
+        return jsonify({'message': 'Parking spot not found'}), 404
+
+    db.session.delete(spot)
+    db.session.commit()
+    return jsonify({'message': 'Parking spot deleted successfully'}), 200
 
 @app.route('/review_parking_spot/<spot_id>', methods=['POST'])  # spot_id is now a string
 def review_parking_spot(spot_id):
@@ -151,6 +161,34 @@ def brta_route():
         return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
     finally:
         brta_session.remove()
+
+
+#admin
+@app.route('/admin/users', methods=['GET'])
+def get_all_users():
+    """Fetch all users from the database"""
+    users = User.query.all()
+    users_list = [{
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+        'phone': user.phone,
+        'user_type': user.user_type
+    } for user in users]
+    
+    return jsonify(users_list), 200
+
+@app.route('/admin/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    """Delete a user by ID"""
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'User deleted successfully'}), 200
+
 
 #booking routes
 

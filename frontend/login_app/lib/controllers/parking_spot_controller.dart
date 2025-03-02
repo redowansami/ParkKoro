@@ -55,4 +55,14 @@ class ParkingSpotController {
       throw Exception('Failed to complete action: ${response.body}');
     }
   }
+
+  // Delete a parking spot
+  Future<void> deleteParkingSpot(String spotId) async {
+    final response = await http.delete(
+      Uri.parse('http://127.0.0.1:5000/admin/parking_spots/$spotId'),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete parking spot');
+    }
+  }
 }
