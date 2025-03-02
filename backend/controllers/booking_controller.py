@@ -7,44 +7,61 @@ from __init__ import db
 from flask_login import current_user
 from datetime import datetime, timedelta
 
+def process_payment(amount):
+    """
+    Dummy payment processing function.
+    Replace this logic with actual payment gateway integration.
+    """
+    if amount > 0:
+        return True, f"PAY_{datetime.now().strftime('%Y%m%d%H%M%S')}"  # Simulating a successful payment
+    return False, None  # Simulating a failed payment
+
 def create_booking():
     data = request.get_json()
 
-    # Validate required fields
-    required_fields = ['spot_id', 'start_time', 'end_time']
+    required_fields = ['spot_id', 'start_time', 'end_time', 'amount']
     if not all(field in data for field in required_fields):
         return jsonify({'message': 'Missing required fields.'}), 400
 
-    # Calculate duration
     start_time = datetime.fromisoformat(data['start_time'])
     end_time = datetime.fromisoformat(data['end_time'])
     duration = end_time - start_time
 
-    # Check if the parking spot is available
     spot = ParkingSpot.query.filter_by(spot_id=data['spot_id'], availability_status=True).first()
     if not spot:
         return jsonify({'message': 'Parking spot is not available.'}), 400
 
-    # Create a new booking
+    # Attempt Payment
+    payment_successful, transaction_id = process_payment(data['amount'])
+
+    if not payment_successful:
+        return jsonify({'message': 'Payment failed. Booking not created.'}), 400
+
+    # Create Booking only if payment is successful
     new_booking = Booking(
-        booking_id=f"BOOK_{datetime.now().strftime('%Y%m%d%H%M%S')}",  # Generate a unique booking ID
-        renter_id=current_user.username,  # Current user is the renter
+        booking_id=f"BOOK_{datetime.now().strftime('%Y%m%d%H%M%S')}",
+        renter_id=current_user.username,
         spot_id=data['spot_id'],
         booking_date=datetime.now(),
         start_time=start_time,
         end_time=end_time,
         duration=duration,
+        transaction_id=transaction_id,
         cancellation_status='Pending'
     )
 
-    # Update parking spot availability
+    # Mark spot as unavailable
     spot.availability_status = False
 
-    # Add and commit to the database
     db.session.add(new_booking)
     db.session.commit()
 
-    return jsonify({'message': 'Booking created successfully.', 'booking_id': new_booking.booking_id}), 201
+    return jsonify({
+        'message': 'Booking confirmed after successful payment.',
+        'booking_id': new_booking.booking_id,
+        'transaction_id': transaction_id
+    }), 201
+
 
 def cancel_booking(booking_id):
     booking = Booking.query.filter_by(booking_id=booking_id).first()
