@@ -4,7 +4,7 @@ import '../models/login_model.dart';
 import 'admin_page.dart';
 import 'space_owner_page.dart';
 import 'vehicle_owner_page.dart';
-import 'register_page.dart'; // Import the RegisterPage class
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_app/View/booking_page.dart';
+import 'package:login_app/View/edit_password_screen.dart';
 import '../controllers/parking_spot_controller.dart';
 import '../models/parking_spot.dart';
 import 'login_page.dart'; // Import the RegisterPage class
@@ -133,21 +134,15 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                     iconColor: Colors.blue,
                   ),
                   _buildActionButton(
-                    icon: Icons.bookmark_add,
-                    label: 'Reserve Spot',
-                    onTap: () {},
-                    iconColor: Colors.green,
-                  ),
-                  _buildActionButton(
                     icon: Icons.history,
                     label: 'History',
                     onTap: () {},
                     iconColor: Colors.purple,
                   ),
                   _buildActionButton(
-                    icon: Icons.payment,
-                    label: 'Payments',
-                    onTap: () {},
+                    icon: Icons.edit,
+                    label: 'Change Password',
+                    onTap: _editPassword,
                     iconColor: Colors.orange,
                   ),
                   _buildActionButton(
@@ -157,10 +152,16 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                     iconColor: Colors.amber,
                   ),
                   _buildActionButton(
-                    icon: Icons.support_agent,
-                    label: 'Support',
+                    icon: Icons.cancel_outlined,
+                    label: 'Cancel Booking',
                     onTap: () {},
-                    iconColor: Colors.teal,
+                    iconColor: Colors.red,
+                  ),
+                  _buildActionButton(
+                    icon: Icons.notifications,
+                    label: 'Notifications',
+                    onTap: () {},
+                    iconColor: Colors.green,
                   ),
                 ],
               ),
@@ -205,6 +206,16 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
           ),
         ),
       ],
+    );
+  }
+
+  void _editPassword() {
+    // Navigate to Edit Password Screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditPasswordScreen(username: widget.username),
+      ),
     );
   }
 
