@@ -43,6 +43,41 @@ def logout_route():
     logout_user() 
     return jsonify({'message': 'Logged out successfully'}), 200
 
+# In app.py or auth_controller.py
+@app.route('/edit_password', methods=['PUT'])
+@jwt_required()
+def edit_password():
+    # Get the current user from the JWT token
+    current_user_data = get_jwt_identity()
+    username = current_user_data['username']
+
+    # Fetch the user from the database
+    user = User.query.filter_by(username=username).first()
+
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    # Get the data from the request
+    data = request.get_json()
+    new_password = data.get('new_password')
+    current_password = data.get('current_password')
+
+    if not new_password or not current_password:
+        return jsonify({'message': 'Both current and new passwords are required'}), 400
+
+    # Verify the current password
+    if not bcrypt.check_password_hash(user.password, current_password):
+        return jsonify({'message': 'Current password is incorrect'}), 400
+
+    # Hash the new password and update it
+    hashed_new_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    user.password = hashed_new_password
+
+    # Save the updated password
+    db.session.commit()
+
+    return jsonify({'message': 'Password updated successfully'}), 200
+
 
 @app.route('/add_parking_spot', methods=['POST']) 
 def add_parking_spot():
