@@ -1,0 +1,2 @@
+C:/SPL2/ParkKoro/frontend/login_app/android/app/.cxx/Debug/263w3r1e/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/SPL2/ParkKoro/frontend/login_app/android/app/.cxx/Debug/263w3r1e/armeabi-v7a/CMakeFiles/rebuild_cache.dir
