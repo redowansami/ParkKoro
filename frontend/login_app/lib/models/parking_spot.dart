@@ -10,7 +10,7 @@ class ParkingSpot {
   bool surveillance;
   String cancellationPolicy;
   bool availabilityStatus;
-  bool verified; // Add this field
+  bool verified; 
 
   ParkingSpot({
     required this.spotID,
