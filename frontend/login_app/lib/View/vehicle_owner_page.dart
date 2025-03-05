@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_app/View/booking_page.dart';
 import 'package:login_app/View/edit_password_screen.dart';
+import 'package:login_app/View/view_notification_screen.dart';
 import '../controllers/parking_spot_controller.dart';
 import '../models/parking_spot.dart';
 import 'login_page.dart'; // Import the RegisterPage class
@@ -160,7 +161,12 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                   _buildActionButton(
                     icon: Icons.notifications,
                     label: 'Notifications',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ViewNotificationScreen()),
+                      );
+                    },
                     iconColor: Colors.green,
                   ),
                 ],

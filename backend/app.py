@@ -2,6 +2,7 @@ from flask_cors import CORS
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user  # Import Flask-Login components
+from controllers.notification_controller import send_notification, view_notifications
 from models.user_model import User
 from models.parking_spot_model import ParkingSpot
 from models.parking_spot_model import ParkingSpot as ParkingSpotModel
@@ -264,6 +265,14 @@ def initiate_refund_route(transaction_id):
 @app.route('/api/payments/<transaction_id>', methods=['GET'])
 def get_payment_details_route(transaction_id):
     return get_payment_details(transaction_id)
+
+@app.route('/notifications/send', methods=['POST'])
+def send_notification_route():
+    return send_notification()
+
+@app.route('/notifications/view', methods=['GET'])
+def view_notifications_route():
+    return view_notifications()
 
 if __name__ == '__main__':
     app.run(debug=True, host="127.0.0.1", port=5000)
