@@ -9,7 +9,7 @@ from models.brta_data_model import BrtaData
 from controllers.payment_controller import process_payment, initiate_refund, get_payment_details
 from controllers.booking_controller import create_booking, cancel_booking, view_booking_details, update_availability
 from controllers.auth_controller import register, login
-from controllers.parking_controller import add_parking_spot, unverified_parking_spots, review_parking_spot, verified_parking_spots
+from controllers.parking_controller import add_parking_spot, edit_parking_spot, get_parking_spots_by_owner, unverified_parking_spots, review_parking_spot, verified_parking_spots
 from __init__ import db, bcrypt, jwt, create_app, login_manager  # Import login_manager
 from datetime import timedelta
 from sqlalchemy import create_engine
@@ -110,6 +110,14 @@ def add_parking_spot():
     except Exception as e:
         print('Error:', str(e))  # Debugging
         return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
+
+@app.route('/get_parking_spots', methods=['POST'])
+def get_parking_spots_route():
+    return get_parking_spots_by_owner()
+
+@app.route('/edit_parking_spot', methods=['PUT'])
+def edit_parking_spot_route():
+    return edit_parking_spot()
 
 @app.route('/unverified_parking_spots', methods=['GET'])
 def unverified_parking_spots():
