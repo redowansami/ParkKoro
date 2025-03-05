@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:login_app/View/admin/manage_listing_screen.dart';
 import 'package:login_app/View/admin/manage_users_screen.dart';
 import 'package:login_app/View/admin/review_requests_screen.dart';
+import 'package:login_app/View/admin/send_notification_screen.dart';
 import 'login_page.dart';
 
 class AdminPage extends StatefulWidget {
@@ -84,8 +85,8 @@ class _AdminPageState extends State<AdminPage> {
               context,
               icon: Icons.report,
               title: 'Notifications',
-              subtitle: 'View reports & send alerts',
-              navigateTo: const ManageNotificationsScreen(),
+              subtitle: 'Send alerts',
+              navigateTo: const SendNotificationScreen(),
               
             ),
             _buildDashboardCard(
