@@ -1,4 +1,5 @@
 from flask import request, jsonify
+import requests
 from models.payment_model import Payment
 from models.booking_model import Booking
 from __init__ import db
@@ -8,7 +9,7 @@ def process_payment():
     data = request.get_json()
 
     # Validate required fields
-    required_fields = ['booking_id', 'amount']
+    required_fields = ['booking_id', 'amount', 'vehicle_owner']
     if not all(field in data for field in required_fields):
         return jsonify({'message': 'Missing required fields.'}), 400
 

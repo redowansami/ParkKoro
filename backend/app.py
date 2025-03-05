@@ -2,6 +2,8 @@ from flask_cors import CORS
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user  # Import Flask-Login components
+from models.booking_model import Booking
+from models.payment_model import Payment
 from controllers.notification_controller import send_notification, view_notifications
 from models.user_model import User
 from models.parking_spot_model import ParkingSpot
@@ -273,6 +275,43 @@ def send_notification_route():
 @app.route('/notifications/view', methods=['GET'])
 def view_notifications_route():
     return view_notifications()
+
+# @app.route('/api/payments/sslcommerz', methods=['POST'])
+# def process_sslcommerz_payment():
+#     data = request.get_json()
+#     required_fields = ['booking_id', 'amount','vehicle_owner']
+#     print(data)
+#     if not all(field in data for field in required_fields):
+#         return jsonify({'message': 'Missing required fields.'}), 400
+
+#     # Here you would invoke the SSLCommerz API, and handle payment processing logic.
+#     # Use the data['booking_id'] and data['amount'] to trigger the payment process
+#     # Simulating payment success
+#     payment_successful, transaction_id = process_sslcommerz_payment_logic(data['amount'],data['booking_id'],data['vehicle_owner'])
+
+#     if not payment_successful:
+#         return jsonify({'message': 'Payment failed. Booking not created.'}), 400
+
+#     # Now that payment is successful, we update the booking and add payment record
+#     booking = Booking.query.filter_by(booking_id=data['booking_id']).first()
+#     if not booking:
+#         return jsonify({'message': 'Booking not found.'}), 404
+
+#     new_payment = Payment(
+#         transaction_id=transaction_id,
+#         amount=data['amount'],
+#         status='Completed',
+#         booking_id=data['booking_id'],
+#         refund_status='Pending'
+#     )
+#     db.session.add(new_payment)
+#     db.session.commit()
+
+#     booking.cancellation_status = 'Confirmed'
+#     db.session.commit()
+
+#     return jsonify({'message': 'Booking confirmed after successful payment.'}), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True, host="127.0.0.1", port=5000)
