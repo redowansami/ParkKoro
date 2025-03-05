@@ -1,6 +1,7 @@
 # not integrated, routes added in app.py
 
 from flask import request, jsonify
+from models.payment_model import Payment
 from models.booking_model import Booking
 from models.parking_spot_model import ParkingSpot
 from __init__ import db
@@ -16,10 +17,57 @@ def process_payment(amount):
         return True, f"PAY_{datetime.now().strftime('%Y%m%d%H%M%S')}"  # Simulating a successful payment
     return False, None  # Simulating a failed payment
 
+# def create_booking():
+#     data = request.get_json()
+
+#     required_fields = ['spot_id', 'start_time', 'end_time', 'amount']
+#     if not all(field in data for field in required_fields):
+#         return jsonify({'message': 'Missing required fields.'}), 400
+
+#     start_time = datetime.fromisoformat(data['start_time'])
+#     end_time = datetime.fromisoformat(data['end_time'])
+#     duration = end_time - start_time
+
+#     spot = ParkingSpot.query.filter_by(spot_id=data['spot_id'], availability_status=True).first()
+#     if not spot:
+#         return jsonify({'message': 'Parking spot is not available.'}), 400
+
+#     # Attempt Payment
+#     payment_successful, transaction_id = process_payment(data['amount'])
+
+#     if not payment_successful:
+#         return jsonify({'message': 'Payment failed. Booking not created.'}), 400
+
+#     # Create Booking only if payment is successful
+#     new_booking = Booking(
+#         booking_id=f"BOOK_{datetime.now().strftime('%Y%m%d%H%M%S')}",
+#         renter_id=current_user.username,
+#         spot_id=data['spot_id'],
+#         booking_date=datetime.now(),
+#         start_time=start_time,
+#         end_time=end_time,
+#         duration=duration,
+#         transaction_id=transaction_id,
+#         cancellation_status='Pending'
+#     )
+
+#     # Mark spot as unavailable
+#     spot.availability_status = False
+
+#     db.session.add(new_booking)
+#     db.session.commit()
+
+#     return jsonify({
+#         'message': 'Booking confirmed after successful payment.',
+#         'booking_id': new_booking.booking_id,
+#         'transaction_id': transaction_id
+#     }), 201
+
+
 def create_booking():
     data = request.get_json()
 
-    required_fields = ['spot_id', 'start_time', 'end_time', 'amount']
+    required_fields = ['spot_id', 'start_time', 'end_time', 'amount', 'renter_id']
     if not all(field in data for field in required_fields):
         return jsonify({'message': 'Missing required fields.'}), 400
 
@@ -27,33 +75,61 @@ def create_booking():
     end_time = datetime.fromisoformat(data['end_time'])
     duration = end_time - start_time
 
-    spot = ParkingSpot.query.filter_by(spot_id=data['spot_id'], availability_status=True).first()
-    if not spot:
-        return jsonify({'message': 'Parking spot is not available.'}), 400
+    # Check if the spot is available for the required time period
+    overlapping_bookings = Booking.query.filter(
+        Booking.spot_id == data['spot_id'],
+        Booking.end_time > start_time,
+        Booking.start_time < end_time
+    ).all()
 
-    # Attempt Payment
-    payment_successful, transaction_id = process_payment(data['amount'])
+    if overlapping_bookings:
+        return jsonify({'message': 'The parking spot is not available during the selected time.'}), 400
 
-    if not payment_successful:
-        return jsonify({'message': 'Payment failed. Booking not created.'}), 400
-
-    # Create Booking only if payment is successful
+    # Create Booking first, so the booking_id is available
     new_booking = Booking(
         booking_id=f"BOOK_{datetime.now().strftime('%Y%m%d%H%M%S')}",
-        renter_id=current_user.username,
+        renter_id=data['renter_id'],
         spot_id=data['spot_id'],
         booking_date=datetime.now(),
         start_time=start_time,
         end_time=end_time,
         duration=duration,
-        transaction_id=transaction_id,
         cancellation_status='Pending'
     )
 
-    # Mark spot as unavailable
-    spot.availability_status = False
-
+    # Add the booking to the database and commit to generate the booking_id
     db.session.add(new_booking)
+    db.session.commit()
+
+    # Now mark the parking spot as unavailable
+    spot = ParkingSpot.query.filter_by(spot_id=data['spot_id']).first()
+    if spot:
+        spot.availability_status = False  # Mark the spot as unavailable
+        db.session.commit()
+
+    # Now we can safely insert the payment because the booking exists and has a valid booking_id
+    payment_successful, transaction_id = process_payment(data['amount'])
+
+    if not payment_successful:
+        # If payment fails, we can delete the booking and set the spot back to available
+        db.session.delete(new_booking)
+        if spot:
+            spot.availability_status = True  # Set the spot back to available
+            db.session.commit()
+        db.session.commit()
+        return jsonify({'message': 'Payment failed. Booking not created.'}), 400
+
+    # Now that payment is successful, insert the payment record
+    new_payment = Payment(
+        transaction_id=transaction_id,  # Store the transaction ID
+        amount=data['amount'],
+        status='Completed',  # Assuming the payment is successful
+        booking_id=new_booking.booking_id,  # Set the valid booking_id from the new booking
+        refund_status='Pending'  # Assuming no refund for successful payments
+    )
+
+    # Add the new payment to the database
+    db.session.add(new_payment)
     db.session.commit()
 
     return jsonify({
