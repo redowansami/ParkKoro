@@ -152,7 +152,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class BookingPage extends StatefulWidget {
-  final String spotId;
+  final int spotId;
   final double pricePerHour;
   final String renterId;  // Added renterId
 

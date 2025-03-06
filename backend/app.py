@@ -12,7 +12,7 @@ from models.brta_data_model import BrtaData
 from controllers.payment_controller import process_payment, initiate_refund, get_payment_details
 from controllers.booking_controller import create_booking, cancel_booking, view_booking_details, update_availability
 from controllers.auth_controller import edit_password, register, login
-from controllers.parking_controller import add_parking_spot, edit_parking_spot, get_parking_spots_by_owner, unverified_parking_spots, review_parking_spot, verified_parking_spots
+from controllers.parking_controller import add_parking_spot, edit_parking_spot, get_parking_spots_by_owner, search_nearest_parking_spots, unverified_parking_spots, review_parking_spot, verified_parking_spots
 from __init__ import db, bcrypt, jwt, create_app, login_manager  # Import login_manager
 from datetime import timedelta
 from sqlalchemy import create_engine
@@ -53,36 +53,13 @@ def edit_password_route():
 
 
 @app.route('/add_parking_spot', methods=['POST']) 
-def add_parking_spot():
-    try:
-        data = request.get_json()
-        print('Received payload:', data)  
+def add_parking_route():
+    return add_parking_spot()
 
-        required_fields = ['spot_id', 'owner_id', 'vehicle_type', 'location', 'gps_coordinates', 'price']
-        for field in required_fields:
-            if field not in data:
-                return jsonify({'message': f'Missing required field: {field}'}), 400
+@app.route('/search_nearest_parking_spots', methods=['POST'])
+def search_nearest_parking_spots_route():
+    return search_nearest_parking_spots()
 
-        new_spot = ParkingSpotModel(
-            spot_id=data['spot_id'],
-            owner_id=data['owner_id'],
-            admin_id=data.get('admin_id'),
-            vehicle_type=data['vehicle_type'],
-            location=data['location'],
-            gps_coordinates=data['gps_coordinates'],
-            price=data['price'],
-            ev_charging=data.get('ev_charging', False),
-            surveillance=data.get('surveillance', False),
-            cancellation_policy=data.get('cancellation_policy', 'Strict'),
-            availability_status=data.get('availability_status', True)
-        )
-        db.session.add(new_spot)
-        db.session.commit()
-
-        return jsonify({'message': 'Parking spot submitted for review.'}), 201
-    except Exception as e:
-        print('Error:', str(e))  # Debugging
-        return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
 
 @app.route('/get_parking_spots', methods=['POST'])
 def get_parking_spots_route():
@@ -93,22 +70,8 @@ def edit_parking_spot_route():
     return edit_parking_spot()
 
 @app.route('/unverified_parking_spots', methods=['GET'])
-def unverified_parking_spots():
-    unverified_spots = ParkingSpot.query.filter_by(verified=False).all()
-    spots_list = [{
-        'spot_id': spot.spot_id,
-        'owner_id': spot.owner_id,
-        'admin_id': spot.admin_id,
-        'vehicle_type': spot.vehicle_type,
-        'location': spot.location,
-        'gps_coordinates': spot.gps_coordinates,
-        'price': spot.price,
-        'ev_charging': spot.ev_charging,
-        'surveillance': spot.surveillance,
-        'cancellation_policy': spot.cancellation_policy,
-        'availability_status': spot.availability_status
-    } for spot in unverified_spots]
-    return jsonify(spots_list), 200
+def unverified_parking_routes():
+    return unverified_parking_spots()
 
 @app.route('/admin/parking_spots/<spot_id>', methods=['DELETE'])
 def delete_parking_spot(spot_id):
@@ -122,31 +85,8 @@ def delete_parking_spot(spot_id):
     return jsonify({'message': 'Parking spot deleted successfully'}), 200
 
 @app.route('/review_parking_spot/<spot_id>', methods=['POST'])  # spot_id is now a string
-def review_parking_spot(spot_id):
-    try:
-        data = request.get_json()
-        action = data.get('action')
-       
-        # Query the ParkingSpot by the spot_id (string)
-        spot = ParkingSpot.query.filter_by(spot_id=spot_id).first()  # Use filter_by since spot_id is a string now
-        if not spot:
-            return jsonify({'message': 'Parking spot not found.'}), 404
-
-        if action == 'accept':
-            spot.verified = True  
-            db.session.commit()
-            return jsonify({'message': 'Parking spot approved.'}), 200
-
-        elif action == 'delete':
-            db.session.delete(spot)
-            db.session.commit()
-            return jsonify({'message': 'Parking spot deleted.'}), 200
-
-        else:
-            return jsonify({'message': 'Invalid action.'}), 400
-
-    except Exception as e:
-        return jsonify({'message': 'An error occurred', 'error': str(e)}), 500
+def review_parking_spot_route(spot_id):
+    return review_parking_spot(spot_id)
     
 @app.route('/verified_parking_spots', methods=['GET'])
 def verified_parking_spots_route():

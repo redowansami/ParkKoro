@@ -17,7 +17,7 @@ class AdminController {
     }
   }
 
-  Future<void> reviewSpot(String spotId, String action) async {
+  Future<void> reviewSpot(int spotId, String action) async {
     try {
       final response = await http.post(
         Uri.parse('http://127.0.0.1:5000/review_parking_spot/$spotId'),
