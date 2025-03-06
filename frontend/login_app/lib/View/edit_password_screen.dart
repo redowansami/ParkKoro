@@ -1,8 +1,7 @@
-// NEED SECURE STORAGE PACKAGE TO USE THIS
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'login_page.dart';
 
 class EditPasswordScreen extends StatefulWidget {
@@ -17,11 +16,9 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
   final TextEditingController _currentPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final storage = FlutterSecureStorage();
 
-  // Method to edit the password
   Future<void> _editPassword() async {
-    final String token = "your_jwt_token";  // Fetch JWT token securely
-
     if (_newPasswordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('New passwords do not match')),
@@ -31,24 +28,21 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
 
     final response = await http.put(
       Uri.parse('http://127.0.0.1:5000/edit_password'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
+      headers: { 'Content-Type': 'application/json' }, // Kept Content-Type, removed Authorization
       body: jsonEncode({
+        'username': widget.username,
         'current_password': _currentPasswordController.text,
         'new_password': _newPasswordController.text,
       }),
     );
-
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Password updated successfully')),
       );
-      Navigator.pop(context); // Return to the previous screen after success
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update password')),
+        SnackBar(content: Text(jsonDecode(response.body)['message'])),
       );
     }
   }
@@ -62,7 +56,7 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Handle logout logic
+              storage.delete(key: "jwt_token");
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const LoginPage()),

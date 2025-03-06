@@ -59,3 +59,31 @@ def login():
         return jsonify({'access_token': access_token, 'user_type': user.user_type}), 200
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
+    
+def edit_password():
+    """Allows the logged-in user to change their password securely."""
+    data = request.get_json()
+
+    # Get the username, current password, and new password from the request body
+    username = data.get('username')
+    current_password = data.get('current_password')
+    new_password = data.get('new_password')
+
+    if not username or not current_password or not new_password:
+        return jsonify({'message': 'Username, current password, and new password are required'}), 400
+
+    # Fetch user from the database
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    # Verify the current password
+    if not bcrypt.check_password_hash(user.password, current_password):
+        return jsonify({'message': 'Current password is incorrect'}), 400
+
+    # Hash the new password and update it
+    hashed_new_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    user.password = hashed_new_password
+    db.session.commit()
+
+    return jsonify({'message': 'Password updated successfully'}), 200    

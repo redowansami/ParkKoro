@@ -11,7 +11,7 @@ from models.parking_spot_model import ParkingSpot as ParkingSpotModel
 from models.brta_data_model import BrtaData
 from controllers.payment_controller import process_payment, initiate_refund, get_payment_details
 from controllers.booking_controller import create_booking, cancel_booking, view_booking_details, update_availability
-from controllers.auth_controller import register, login
+from controllers.auth_controller import edit_password, register, login
 from controllers.parking_controller import add_parking_spot, edit_parking_spot, get_parking_spots_by_owner, unverified_parking_spots, review_parking_spot, verified_parking_spots
 from __init__ import db, bcrypt, jwt, create_app, login_manager  # Import login_manager
 from datetime import timedelta
@@ -48,38 +48,8 @@ def logout_route():
 
 # In app.py or auth_controller.py
 @app.route('/edit_password', methods=['PUT'])
-@jwt_required()
-def edit_password():
-    # Get the current user from the JWT token
-    current_user_data = get_jwt_identity()
-    username = current_user_data['username']
-
-    # Fetch the user from the database
-    user = User.query.filter_by(username=username).first()
-
-    if not user:
-        return jsonify({'message': 'User not found'}), 404
-
-    # Get the data from the request
-    data = request.get_json()
-    new_password = data.get('new_password')
-    current_password = data.get('current_password')
-
-    if not new_password or not current_password:
-        return jsonify({'message': 'Both current and new passwords are required'}), 400
-
-    # Verify the current password
-    if not bcrypt.check_password_hash(user.password, current_password):
-        return jsonify({'message': 'Current password is incorrect'}), 400
-
-    # Hash the new password and update it
-    hashed_new_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-    user.password = hashed_new_password
-
-    # Save the updated password
-    db.session.commit()
-
-    return jsonify({'message': 'Password updated successfully'}), 200
+def edit_password_route():
+    return edit_password()
 
 
 @app.route('/add_parking_spot', methods=['POST']) 
