@@ -37,7 +37,7 @@ class _ManageListingsScreenState extends State<ManageListingsScreen> {
     }
   }
 
-  Future<void> _deleteParkingSpot(String spotId) async {
+  Future<void> _deleteParkingSpot(int spotId) async {
     try {
       await _controller.deleteParkingSpot(spotId);
       ScaffoldMessenger.of(context).showSnackBar(

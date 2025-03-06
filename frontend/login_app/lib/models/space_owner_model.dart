@@ -1,5 +1,5 @@
 class SpaceOwnerModel {
-  String spotId = '';
+  int spotId = 0;
   String gpsCoordinates = '';
   String address = '';
   double pricing = 0.0;

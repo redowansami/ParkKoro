@@ -37,7 +37,7 @@ class _ReviewRequestsScreenState extends State<ReviewRequestsScreen> {
     }
   }
 
-  Future<void> _reviewSpot(String spotId, String action) async {
+  Future<void> _reviewSpot(int spotId, String action) async {
     try {
       await _controller.reviewSpot(spotId, action);
       ScaffoldMessenger.of(context).showSnackBar(
