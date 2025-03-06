@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final LoginModel _model = LoginModel();
   bool _isLoading = false;
   bool _isPasswordVisible = false;
+  bool _showLoginForm = false;
 
   Future<void> _loginUser() async {
     setState(() => _isLoading = true);
@@ -53,151 +54,372 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _toggleLoginForm() {
+    setState(() {
+      _showLoginForm = !_showLoginForm;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 60),
-                Icon(
-                  Icons.local_parking,
-                  size: 80,
-                  color: Theme.of(context).primaryColor,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Welcome Back',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+      body: Container(
+        // This ensures the container fills the entire screen
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFD81B60),  // Pink/magenta gradient start
+              Color(0xFF6A1B9A),  // Deep purple gradient end
+            ],
+          ),
+        ),
+        child: SafeArea(
+          // Using Stack to position the main content within the full screen
+          child: Stack(
+            children: [
+              // Main content
+              _showLoginForm ? _buildLoginForm() : _buildWelcomeScreen(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWelcomeScreen() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Top section with logo
+          Column(
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+              // Parking logo
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Circle background
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Sign in to continue',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 48),
-                TextField(
-                  onChanged: (value) => _model.username = value,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    prefixIcon: const Icon(Icons.person_outline),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  // P symbol
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  onChanged: (value) => _model.password = value,
-                  obscureText: !_isPasswordVisible,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _loginUser,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    child: const Center(
+                      child: Text(
+                        "P",
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFD81B60),
+                        ),
                       ),
                     ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : const Text(
-                            'Login',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
+                  ),
+                  // Car icon on top
+                  Positioned(
+                    bottom: 0,
+                    child: Icon(
+                      Icons.directions_car,
+                      size: 24,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'PARKKORO',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ],
+          ),
+          
+          // Middle section with welcome text and buttons
+          Column(
+            children: [
+              const Text(
+                'Welcome Back',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 40),
+              // Sign In Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _toggleLoginForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      side: const BorderSide(color: Colors.white),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'SIGN IN',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
                   ),
                 ),
-                TextButton(
+              ),
+              const SizedBox(height: 16),
+              // Sign Up Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => const RegisterPage()),
                     );
                   },
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Don\'t have an account? ',
-                      style: TextStyle(color: Colors.grey[600]),
-                      children: [
-                        TextSpan(
-                          text: 'Register',
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.grey[800],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'SIGN UP',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
                     ),
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+          
+          // Bottom section with social media
+          Column(
+            children: [
+              const Text(
+                'Login with Social Media',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _socialMediaIcon(Icons.camera_alt_outlined),
+                  const SizedBox(width: 24),
+                  _socialMediaIcon(Icons.flutter_dash),
+                  const SizedBox(width: 24),
+                  _socialMediaIcon(Icons.facebook),
+                ],
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildLoginForm() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Parking logo
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              // Circle background
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              // P symbol
+              Container(
+                width: 45,
+                height: 45,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: const Center(
+                  child: Text(
+                    "P",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFD81B60),
+                    ),
+                  ),
+                ),
+              ),
+              // Car icon on top
+              Positioned(
+                bottom: 0,
+                child: Icon(
+                  Icons.directions_car,
+                  size: 18,
+                  color: Colors.white.withOpacity(0.9),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Sign In',
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
-        ),
+          const SizedBox(height: 40),
+          TextField(
+            onChanged: (value) => _model.username = value,
+            decoration: InputDecoration(
+              labelText: 'Username',
+              prefixIcon: const Icon(Icons.person_outline, color: Colors.white70),
+              labelStyle: const TextStyle(color: Colors.white70),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.white70),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+            ),
+            style: const TextStyle(color: Colors.white),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            onChanged: (value) => _model.password = value,
+            obscureText: !_isPasswordVisible,
+            decoration: InputDecoration(
+              labelText: 'Password',
+              prefixIcon: const Icon(Icons.lock_outline, color: Colors.white70),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.white70,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+              ),
+              labelStyle: const TextStyle(color: Colors.white70),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.white70),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Colors.white),
+              ),
+            ),
+            style: const TextStyle(color: Colors.white),
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: _isLoading ? null : _loginUser,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF6A1B9A),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                elevation: 0,
+              ),
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6A1B9A)),
+                      ),
+                    )
+                  : const Text(
+                      'LOG IN',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextButton(
+            onPressed: _toggleLoginForm,
+            child: const Text(
+              'BACK',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _socialMediaIcon(IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 1),
+      ),
+      child: Icon(
+        icon,
+        color: Colors.white,
+        size: 20,
       ),
     );
   }
