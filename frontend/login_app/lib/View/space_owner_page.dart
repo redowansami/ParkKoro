@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:login_app/View/login_page.dart';
 import 'package:login_app/View/spaceOwner/add_listing_screen.dart';
 import 'package:login_app/View/spaceOwner/edit_listing_screen.dart';
+import 'package:login_app/View/spaceOwner/edit_profile_screen.dart';
 import 'package:login_app/View/view_notification_screen.dart';
 
 class SpaceOwnerPage extends StatefulWidget {
@@ -79,7 +80,12 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
               title: 'Edit Profile',
               description: 'Update your personal details.',
               onTap: () {
-                // Add logic for editing profile
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditProfileScreen(username: widget.username),  // Pass the username to the EditProfileScreen
+                  ),
+                );
               },
             ),
             _buildSection(

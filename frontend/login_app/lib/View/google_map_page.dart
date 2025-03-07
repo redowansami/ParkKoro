@@ -25,7 +25,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   List<Marker> randomMarkers = [];
   LatLng? selectedDestination;
 
-  final String googleAPIKey = 'AIzaSyDdpVNmafi9ZXaXaWbmc7irozN9Qllvh1A'; // Replace with your API key
+  final String googleAPIKey = 'API_KEY'; // Replace with your API key
 
   @override
   void initState() {

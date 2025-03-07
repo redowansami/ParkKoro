@@ -87,20 +87,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                 ),
               ),
-              ListTile(
-                title: const Text('Admin'),
-                leading: Radio<String>(
-                  value: 'Admin',
-                  groupValue: _model.userType,
-                  onChanged: (value) {
-                    setState(() {
-                      _model.userType = value!;
-                      _nidStepVisible = false;
-                      _formVisible = true;
-                    });
-                  },
-                ),
-              ),
             ],
             if (_nidStepVisible) ...[
               TextField(
