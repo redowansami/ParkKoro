@@ -51,6 +51,62 @@ def logout_route():
 def edit_password_route():
     return edit_password()
 
+@app.route('/update_profile', methods=['PUT'])
+def update_profile():
+    """Allows the logged-in user to update profile information."""
+    data = request.get_json()
+
+    # Extract user data
+    username = data.get('username')
+    nid = data.get('nid')
+    email = data.get('email')
+    phone = data.get('phone')
+
+    if not username or not nid or not email or not phone:
+        return jsonify({'message': 'All fields are required'}), 400
+
+    # Fetch user from the database
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    # Update user profile information
+    user.nid = nid
+    user.email = email
+    user.phone = phone
+    db.session.commit()
+
+    return jsonify({'message': 'Profile updated successfully'}), 200
+
+@app.route('/get_profile_info', methods=['POST'])
+def get_profile_info():
+    """Fetch the profile information of a user based on the provided username."""
+    data = request.get_json()
+
+    # Get the username from the request body
+    username = data.get('username')
+
+    if not username:
+        return jsonify({'message': 'Username is required'}), 400
+
+    # Query the user from the database using the username
+    user = User.query.filter_by(username=username).first()
+
+    # Check if the user exists
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    # If NID is null, return a message or leave it empty
+    nid = user.nid if user.nid else 'NID not available'
+
+    # Return the user's profile information
+    profile_info = {
+        'nid': nid,
+        'email': user.email,
+        'phone': user.phone,
+    }
+
+    return jsonify(profile_info), 200
 
 @app.route('/add_parking_spot', methods=['POST']) 
 def add_parking_route():
