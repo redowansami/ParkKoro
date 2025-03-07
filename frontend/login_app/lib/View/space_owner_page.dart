@@ -3,6 +3,7 @@ import 'package:login_app/View/login_page.dart';
 import 'package:login_app/View/spaceOwner/add_listing_screen.dart';
 import 'package:login_app/View/spaceOwner/edit_listing_screen.dart';
 import 'package:login_app/View/spaceOwner/edit_profile_screen.dart';
+import 'package:login_app/View/spaceOwner/track_review_screen.dart';
 import 'package:login_app/View/view_notification_screen.dart';
 
 class SpaceOwnerPage extends StatefulWidget {
@@ -115,7 +116,12 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
               title: 'Track Reviews',
               description: 'Monitor and respond to user reviews.',
               onTap: () {
-                // Add logic for tracking reviews
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TrackReviewsScreen(ownerId: widget.username), // Pass the owner ID
+                  ),
+                );
               },
             ),
             _buildSection(

@@ -1,5 +1,7 @@
 # not integrated, routes added in app.py
 
+import random
+import string
 from flask import request, jsonify
 import requests
 from models.payment_model import Payment
@@ -167,22 +169,92 @@ def validate_sslcommerz_transaction(transaction_id, amount):
         return False, str(e)
 
 
+# def create_booking():
+#     data = request.get_json()
+
+#     required_fields = ['spot_id', 'start_time', 'end_time', 'amount', 'renter_id', 'transaction_id']
+#     if not all(field in data for field in required_fields):
+#         return jsonify({'message': 'Missing required fields.'}), 400
+
+#     start_time = datetime.fromisoformat(data['start_time'])
+#     end_time = datetime.fromisoformat(data['end_time'])
+#     duration = end_time - start_time
+
+#     # Validate SSLCommerz payment before proceeding
+#     payment_valid, payment_data = validate_sslcommerz_transaction(data['transaction_id'], data['amount'])
+
+#     if not payment_valid:
+#         return jsonify({'message': 'Payment validation failed.', 'error': payment_data}), 400
+
+#     # Check if the spot is available for the required time period
+#     overlapping_bookings = Booking.query.filter(
+#         Booking.spot_id == data['spot_id'],
+#         Booking.end_time > start_time,
+#         Booking.start_time < end_time
+#     ).all()
+
+#     if overlapping_bookings:
+#         return jsonify({'message': 'The parking spot is not available during the selected time.'}), 400
+
+#     # Create Booking
+#     new_booking = Booking(
+#         booking_id=f"BOOK_{datetime.now().strftime('%Y%m%d%H%M%S')}",
+#         renter_id=data['renter_id'],
+#         spot_id=data['spot_id'],
+#         booking_date=datetime.now(),
+#         start_time=start_time,
+#         end_time=end_time,
+#         duration=duration,
+#         cancellation_status='Pending'
+#     )
+
+#     # Add the booking to the database
+#     db.session.add(new_booking)
+#     db.session.commit()
+
+#     # Mark the parking spot as unavailable
+#     spot = ParkingSpot.query.filter_by(spot_id=data['spot_id']).first()
+#     if spot:
+#         spot.availability_status = False  # Mark the spot as unavailable
+#         db.session.commit()
+
+#     # Store Payment Information
+#     new_payment = Payment(
+#         transaction_id=data['transaction_id'],  # Store the transaction ID
+#         amount=data['amount'],
+#         status='Completed',  # Since the payment was already validated
+#         booking_id=new_booking.booking_id,  # Associate with booking
+#         refund_status='Pending'  # Assuming no refund for successful payments
+#     )
+
+#     # Save payment details
+#     db.session.add(new_payment)
+#     db.session.commit()
+
+#     return jsonify({
+#         'message': 'Booking confirmed after successful payment.',
+#         'booking_id': new_booking.booking_id,
+#         'transaction_id': data['transaction_id']
+#     }), 201
+
+def generate_transaction_id():
+    # Generate a random 10-character alphanumeric transaction ID
+    return ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+
 def create_booking():
     data = request.get_json()
 
-    required_fields = ['spot_id', 'start_time', 'end_time', 'amount', 'renter_id', 'transaction_id']
+    required_fields = ['spot_id', 'start_time', 'end_time', 'amount', 'renter_id']
     if not all(field in data for field in required_fields):
         return jsonify({'message': 'Missing required fields.'}), 400
 
+    # Convert start and end times to datetime objects
     start_time = datetime.fromisoformat(data['start_time'])
     end_time = datetime.fromisoformat(data['end_time'])
     duration = end_time - start_time
 
-    # Validate SSLCommerz payment before proceeding
-    payment_valid, payment_data = validate_sslcommerz_transaction(data['transaction_id'], data['amount'])
-
-    if not payment_valid:
-        return jsonify({'message': 'Payment validation failed.', 'error': payment_data}), 400
+    # Generate a transaction ID for this booking
+    transaction_id = generate_transaction_id()
 
     # Check if the spot is available for the required time period
     overlapping_bookings = Booking.query.filter(
@@ -194,7 +266,7 @@ def create_booking():
     if overlapping_bookings:
         return jsonify({'message': 'The parking spot is not available during the selected time.'}), 400
 
-    # Create Booking
+    # Create new booking
     new_booking = Booking(
         booking_id=f"BOOK_{datetime.now().strftime('%Y%m%d%H%M%S')}",
         renter_id=data['renter_id'],
@@ -216,11 +288,11 @@ def create_booking():
         spot.availability_status = False  # Mark the spot as unavailable
         db.session.commit()
 
-    # Store Payment Information
+    # Store Payment Information (payment status is "Completed" by default)
     new_payment = Payment(
-        transaction_id=data['transaction_id'],  # Store the transaction ID
+        transaction_id=transaction_id,  # Generated transaction ID
         amount=data['amount'],
-        status='Completed',  # Since the payment was already validated
+        status='Completed',  # Since the payment is assumed to be validated
         booking_id=new_booking.booking_id,  # Associate with booking
         refund_status='Pending'  # Assuming no refund for successful payments
     )
@@ -232,7 +304,7 @@ def create_booking():
     return jsonify({
         'message': 'Booking confirmed after successful payment.',
         'booking_id': new_booking.booking_id,
-        'transaction_id': data['transaction_id']
+        'transaction_id': transaction_id
     }), 201
 
 def cancel_booking(booking_id):

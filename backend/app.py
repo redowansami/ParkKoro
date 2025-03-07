@@ -2,8 +2,7 @@ from flask_cors import CORS
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user  # Import Flask-Login components
-from models.booking_model import Booking
-from models.payment_model import Payment
+from controllers.review_controller import add_review, delete_review, view_all_reviews, view_booked_spot, view_reviews
 from controllers.notification_controller import send_notification, view_notifications
 from models.user_model import User
 from models.parking_spot_model import ParkingSpot
@@ -278,6 +277,27 @@ def view_notifications_route():
 
 #     return jsonify({'message': 'Booking confirmed after successful payment.'}), 201
 
+#review routes
+@app.route('/reviews/parking_spot/<int:spot_id>/add', methods=['POST'])
+def add_review_route(spot_id):
+    return add_review(spot_id)
+
+# View all reviews for a parking spot (admin or anyone else)
+@app.route('/reviews/parking_spot/<int:spot_id>', methods=['GET'])
+def view_reviews_route(spot_id):
+    return view_reviews(spot_id)
+
+@app.route('/booked_spot', methods=['POST'])
+def view_booked_spot_route():
+    return view_booked_spot()
+
+@app.route('/view_all_reviews', methods=['GET'])
+def view_all_reviews_route():
+    return view_all_reviews()
+
+@app.route('/reviews/delete/<int:review_id>', methods=['DELETE'])
+def delete_review_route(review_id):
+    return delete_review(review_id)
 
 if __name__ == '__main__':
     app.run(debug=True, host="127.0.0.1", port=5000)

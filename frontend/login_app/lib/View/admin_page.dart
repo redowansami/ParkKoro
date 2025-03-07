@@ -3,6 +3,7 @@ import 'package:login_app/View/admin/manage_listing_screen.dart';
 import 'package:login_app/View/admin/manage_users_screen.dart';
 import 'package:login_app/View/admin/review_requests_screen.dart';
 import 'package:login_app/View/admin/send_notification_screen.dart';
+import 'package:login_app/View/admin/view_review_screen.dart';
 import 'login_page.dart';
 
 class AdminPage extends StatefulWidget {
@@ -70,7 +71,7 @@ class _AdminPageState extends State<AdminPage> {
               icon: Icons.star_rate,
               title: 'Manage Reviews',
               subtitle: 'View and remove reviews',
-              navigateTo: const ManageReviewsScreen(),
+              navigateTo: ViewReviewsScreen(),
               
             ),
             _buildDashboardCard(
@@ -140,17 +141,17 @@ class _AdminPageState extends State<AdminPage> {
 }
 
 // Dummy Screens for Navigation
-class ManageReviewsScreen extends StatelessWidget {
-  const ManageReviewsScreen({super.key});
+// class ManageReviewsScreen extends StatelessWidget {
+//   const ManageReviewsScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Manage Reviews')),
-      body: Center(child: Text('Review management features will be added here.')),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text('Manage Reviews')),
+//       body: Center(child: Text('Review management features will be added here.')),
+//     );
+//   }
+// }
 
 class ManageTransactionsScreen extends StatelessWidget {
   const ManageTransactionsScreen({super.key});
