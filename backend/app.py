@@ -2,6 +2,8 @@ from flask_cors import CORS
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user  # Import Flask-Login components
+from models.payment_model import Payment
+from models.booking_model import Booking
 from controllers.review_controller import add_review, delete_review, view_all_reviews, view_booked_spot, view_reviews
 from controllers.notification_controller import send_notification, view_notifications
 from models.user_model import User
@@ -11,7 +13,7 @@ from models.brta_data_model import BrtaData
 from controllers.payment_controller import process_payment, initiate_refund, get_payment_details
 from controllers.booking_controller import create_booking, cancel_booking, view_booking_details, update_availability
 from controllers.auth_controller import edit_password, register, login
-from controllers.parking_controller import add_parking_spot, edit_parking_spot, get_parking_spots_by_owner, search_nearest_parking_spots, unverified_parking_spots, review_parking_spot, verified_parking_spots
+from controllers.parking_controller import add_parking_spot, check_availability, edit_parking_spot, get_parking_spots_by_owner, search_current_nearest_parking_spots, search_nearest_parking_spots, unverified_parking_spots, review_parking_spot, verified_parking_spots
 from __init__ import db, bcrypt, jwt, create_app, login_manager  # Import login_manager
 from datetime import timedelta
 from sqlalchemy import create_engine
@@ -115,6 +117,9 @@ def add_parking_route():
 def search_nearest_parking_spots_route():
     return search_nearest_parking_spots()
 
+@app.route('/search_current_nearest_parking_spots', methods=['POST'])
+def search_current_nearest_parking_spots_route():
+    return search_current_nearest_parking_spots()
 
 @app.route('/get_parking_spots', methods=['POST'])
 def get_parking_spots_route():
@@ -207,6 +212,10 @@ def delete_user(user_id):
 def create_booking_route():
     return create_booking()
 
+@app.route('/check_availability', methods=['POST'])
+def check_availability_route():
+    return check_availability()
+
 @app.route('/api/bookings/<booking_id>/cancel', methods=['PUT'])
 def cancel_booking_route(booking_id):
     return cancel_booking(booking_id)
@@ -241,42 +250,6 @@ def send_notification_route():
 def view_notifications_route():
     return view_notifications()
 
-# @app.route('/api/payments/sslcommerz', methods=['POST'])
-# def process_sslcommerz_payment():
-#     data = request.get_json()
-#     required_fields = ['booking_id', 'amount','vehicle_owner']
-#     print(data)
-#     if not all(field in data for field in required_fields):
-#         return jsonify({'message': 'Missing required fields.'}), 400
-
-#     # Here you would invoke the SSLCommerz API, and handle payment processing logic.
-#     # Use the data['booking_id'] and data['amount'] to trigger the payment process
-#     # Simulating payment success
-#     payment_successful, transaction_id = process_sslcommerz_payment_logic(data['amount'],data['booking_id'],data['vehicle_owner'])
-
-#     if not payment_successful:
-#         return jsonify({'message': 'Payment failed. Booking not created.'}), 400
-
-#     # Now that payment is successful, we update the booking and add payment record
-#     booking = Booking.query.filter_by(booking_id=data['booking_id']).first()
-#     if not booking:
-#         return jsonify({'message': 'Booking not found.'}), 404
-
-#     new_payment = Payment(
-#         transaction_id=transaction_id,
-#         amount=data['amount'],
-#         status='Completed',
-#         booking_id=data['booking_id'],
-#         refund_status='Pending'
-#     )
-#     db.session.add(new_payment)
-#     db.session.commit()
-
-#     booking.cancellation_status = 'Confirmed'
-#     db.session.commit()
-
-#     return jsonify({'message': 'Booking confirmed after successful payment.'}), 201
-
 #review routes
 @app.route('/reviews/parking_spot/<int:spot_id>/add', methods=['POST'])
 def add_review_route(spot_id):
@@ -298,6 +271,23 @@ def view_all_reviews_route():
 @app.route('/reviews/delete/<int:review_id>', methods=['DELETE'])
 def delete_review_route(review_id):
     return delete_review(review_id)
+
+@app.route('/booking_history/<renter_id>', methods=['GET'])
+def get_booking_history(renter_id):
+    # Query the Booking table and join the Payment table on booking_id
+    bookings = db.session.query(Booking, Payment).join(Payment, Payment.booking_id == Booking.booking_id).filter(Booking.renter_id == renter_id).all()
+
+    result = []
+
+    for booking, payment in bookings:
+        result.append({
+            'booking_id': booking.booking_id,
+            'spot_id': booking.spot_id,
+            'booking_date': booking.booking_date.strftime('%Y-%m-%d'),
+            'amount': str(payment.amount),  
+        })
+    
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5000)

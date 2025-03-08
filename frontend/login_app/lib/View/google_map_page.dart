@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as location;
 import 'package:http/http.dart' as http;
+import 'package:login_app/View/booking_screen.dart';
 
 class GoogleMapPage extends StatefulWidget {
-  const GoogleMapPage({super.key});
+  final String username; // Add this field to accept username
+
+  const GoogleMapPage({super.key, required this.username}); // Update the constructor
 
   @override
   _GoogleMapPageState createState() => _GoogleMapPageState();
@@ -25,7 +28,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   List<Marker> parkingMarkers = [];
 
   final String googleAPIKey = 'API_KEY'; // Replace with your API key
-  final String backendUrl = 'http://10.0.2.2:5000/search_nearest_parking_spots'; // Your backend URL
+  final String backendUrl = 'http://10.0.2.2:5000/search_current_nearest_parking_spots'; // Your backend URL
 
   @override
   void initState() {
@@ -135,11 +138,20 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: () {
-                // Implement your booking logic here
-                // For now, we'll just close the dialog
-                Navigator.of(context).pop();
-                _bookNow(spot);
+             onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              
+              // Navigate to the BookingPage with the necessary arguments
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BookingScreen(
+                      spotId: spot['spot_id'],  // Pass spotId
+                      pricePerHour: double.parse(spot['price'].toString()),  // Pass pricePerHour
+                      renterId: widget.username,  // Replace with actual renterId
+                    ),
+                  ),
+                );
               },
               child: Text('Book Now'),
             ),

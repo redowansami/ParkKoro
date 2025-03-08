@@ -17,14 +17,14 @@ def create_app():
     CORS(app)
 
     # Configuration for the main app database (mydb)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://sami:sami@localhost/mydb'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:1434@localhost/mydb'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
     app.config['SECRET_KEY'] = 'your_flask_secret_key'  # Required for Flask-Login
 
     # Configuration for the BRTA database (read-only)
     app.config['SQLALCHEMY_BINDS'] = {
-        'brta': 'postgresql://sami:sami@localhost/brta'
+        'brta': 'postgresql://postgres:1434@localhost/brta'
     }
 
     db.init_app(app)

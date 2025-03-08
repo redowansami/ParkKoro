@@ -11,7 +11,6 @@ class Booking(db.Model):
     booking_id = db.Column(db.String(45), primary_key=True)  # BookingID (PK)
     renter_id = db.Column(db.String(80), db.ForeignKey('user.username'), nullable=False)  # RenterID (FK)
     spot_id = db.Column(db.Integer, db.ForeignKey('parking_spot.spot_id'), nullable=False)  # SpotID (FK)
-    transaction_id = db.Column(db.String(45), db.ForeignKey('payment.transaction_id'), nullable=True)  # TransactionID (FK)
     booking_date = db.Column(db.DateTime, nullable=False)  # BookingDate
     start_time = db.Column(db.DateTime, nullable=False)  # StartTime
     end_time = db.Column(db.DateTime, nullable=False)  # EndTime

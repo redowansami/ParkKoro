@@ -284,9 +284,6 @@ def create_booking():
 
     # Mark the parking spot as unavailable
     spot = ParkingSpot.query.filter_by(spot_id=data['spot_id']).first()
-    if spot:
-        spot.availability_status = False  # Mark the spot as unavailable
-        db.session.commit()
 
     # Store Payment Information (payment status is "Completed" by default)
     new_payment = Payment(

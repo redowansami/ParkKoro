@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:login_app/View/booking_page.dart';
 import 'package:login_app/View/edit_password_screen.dart';
+import 'package:login_app/View/fetch_history_screen.dart';
 import 'package:login_app/View/vehicleOwner/add_review_screen.dart';
 import 'package:login_app/View/view_notification_screen.dart';
 import '../controllers/parking_spot_controller.dart';
 import '../models/parking_spot.dart';
-import 'login_page.dart'; // Import the RegisterPage class
-import 'google_map_page.dart'; // Import the GoogleMapPage
+import 'login_page.dart';
+import 'google_map_page.dart';
 
 class VehicleOwnerPage extends StatefulWidget {
   final String username;
@@ -137,9 +137,22 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                     iconColor: Colors.blue,
                   ),
                   _buildActionButton(
+                    icon: Icons.bookmark,
+                    label: 'Pre-Book',
+                    onTap: () {},  // This should be the function for pre-booking
+                    iconColor: Colors.green,  // You can choose a color for the "Pre-Book" button
+                  ),
+                  _buildActionButton(
                     icon: Icons.history,
                     label: 'History',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FetchHistoryScreen(renterId: widget.username), // Pass renterId to the next screen
+                      ),
+                    );
+                    },
                     iconColor: Colors.purple,
                   ),
                   _buildActionButton(
@@ -239,7 +252,7 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
   void _navigateToGoogleMapPage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const GoogleMapPage()), // Navigate to the GoogleMapPage
+      MaterialPageRoute(builder: (context) => GoogleMapPage(username: widget.username,)), // Navigate to the GoogleMapPage
     );
   }
 }
