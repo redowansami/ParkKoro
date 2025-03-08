@@ -49,10 +49,10 @@ class AdminController {
   }
 
   // Delete a user
-  Future<void> deleteUser(int userId) async {
+  Future<void> deleteUser(String username) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://10.0.2.2:5000/admin/users/$userId'),
+        Uri.parse('http://10.0.2.2:5000/admin/users/$username'),
       );
       if (response.statusCode != 200) {
         throw Exception('Failed to delete user');

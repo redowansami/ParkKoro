@@ -36,9 +36,9 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     }
   }
 
-  Future<void> _deleteUser(int userId) async {
+  Future<void> _deleteUser(String username) async {
     try {
-      await _controller.deleteUser(userId);
+      await _controller.deleteUser(username);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('User deleted successfully.')),
       );
@@ -51,7 +51,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
   }
 
   // Show confirmation dialog
-  void _showDeleteConfirmation(int userId) {
+  void _showDeleteConfirmation(String username) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -68,7 +68,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
-                _deleteUser(userId); // Proceed with deletion
+                _deleteUser(username); // Proceed with deletion
               },
               child: const Text('Delete', style: TextStyle(color: Colors.red)),
             ),
@@ -140,7 +140,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                               Icons.delete,
                               color: Colors.red,
                             ),
-                            onPressed: () => _showDeleteConfirmation(user['id']), // Show confirmation
+                            onPressed: () => _showDeleteConfirmation(user['username']), // Show confirmation
                           ),
                         ),
                       );

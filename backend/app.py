@@ -188,7 +188,6 @@ def get_all_users():
     """Fetch all users from the database"""
     users = User.query.all()
     users_list = [{
-        'id': user.id,
         'username': user.username,
         'email': user.email,
         'phone': user.phone,
@@ -197,10 +196,10 @@ def get_all_users():
     
     return jsonify(users_list), 200
 
-@app.route('/admin/users/<int:user_id>', methods=['DELETE'])
-def delete_user(user_id):
-    """Delete a user by ID"""
-    user = User.query.get(user_id)
+@app.route('/admin/users/<string:username>', methods=['DELETE'])
+def delete_user(username):
+    """Delete a user by username"""
+    user = User.query.filter_by(username=username).first()  # Query by username
     if not user:
         return jsonify({'message': 'User not found'}), 404
 
