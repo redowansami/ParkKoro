@@ -6,7 +6,7 @@ class RegisterController {
   Future<Map<String, dynamic>> fetchVehicleOwnerData(String nid) async {
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:5000/brta?nid=$nid'),
+        Uri.parse('http://10.0.2.2:5000/brta?nid=$nid'),
       );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -21,7 +21,7 @@ class RegisterController {
   Future<void> registerUser(RegisterModel model) async {
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:5000/register'),
+        Uri.parse('http://10.0.2.2:5000/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': model.username,

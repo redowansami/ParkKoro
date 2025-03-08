@@ -21,11 +21,11 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   Set<Polyline> _polylines = Set();
   TextEditingController _searchController = TextEditingController();
 
-  List<LatLng> randomLocations = [];
-  List<Marker> randomMarkers = [];
-  LatLng? selectedDestination;
+  List<LatLng> parkingLocations = [];
+  List<Marker> parkingMarkers = [];
 
   final String googleAPIKey = 'API_KEY'; // Replace with your API key
+  final String backendUrl = 'http://10.0.2.2:5000/search_nearest_parking_spots'; // Your backend URL
 
   @override
   void initState() {
@@ -33,43 +33,61 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     _getCurrentLocation();
   }
 
-  // Generate random location within a 5 km radius
-  LatLng _generateRandomLocation(LatLng center, double radius) {
-    Random random = Random();
-    double angle = random.nextDouble() * 2 * pi;
-    double distance = random.nextDouble() * radius;
-
-    double lat = center.latitude + (distance / 111.32); // 1 degree = 111.32 km
-    double lng = center.longitude + (distance / (111.32 * cos(center.latitude * pi / 180)));
-
-    return LatLng(lat, lng);
-  }
-
   Future<void> _getCurrentLocation() async {
-    var locationData = await _location.getLocation();
+    // Set the current location to the specified lat: 92.5 and long: 91.2
     setState(() {
-      _currentLocation = LatLng(locationData.latitude!, locationData.longitude!);
+      _currentLocation = LatLng(23.7, 90.3);
       _markers.add(Marker(
         markerId: MarkerId('current_location'),
         position: _currentLocation!,
         infoWindow: InfoWindow(title: 'Current Location'),
         icon: BitmapDescriptor.defaultMarker,
       ));
-
-      // Generate 4-5 random locations around the current location within 5km
-      for (int i = 0; i < 5; i++) {
-        LatLng randomLocation = _generateRandomLocation(_currentLocation!, 5);
-        randomLocations.add(randomLocation);
-        randomMarkers.add(Marker(
-          markerId: MarkerId('random_location_$i'),
-          position: randomLocation,
-          infoWindow: InfoWindow(title: 'Destination $i'),
-          onTap: () {
-            _onMarkerTapped(randomLocation);
-          },
-        ));
-      }
     });
+    _fetchParkingSpots(); // Fetch parking spots after setting the location
+  }
+
+  // Fetch parking spots from the backend
+  Future<void> _fetchParkingSpots() async {
+    if (_currentLocation == null) return;
+
+    final response = await http.post(
+      Uri.parse(backendUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'latitude': _currentLocation!.latitude,
+        'longitude': _currentLocation!.longitude,
+        'radius': 5000,  // 5km radius
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final List spots = jsonDecode(response.body);
+      setState(() {
+        parkingLocations.clear();
+        parkingMarkers.clear();
+        for (var spot in spots) {
+          LatLng spotLocation = LatLng(spot['latitude'], spot['longitude']);
+          parkingLocations.add(spotLocation);
+
+          parkingMarkers.add(Marker(
+            markerId: MarkerId(spot['spot_id'].toString()),
+            position: spotLocation,
+            infoWindow: InfoWindow(
+              title: 'Spot ${spot['spot_id']}',
+              snippet: 'Price: ${spot['price']}',
+            ),
+            onTap: () {
+              _onMarkerTapped(spot);  // Pass the spot data to the handler
+            },
+          ));
+        }
+      });
+    } else {
+      throw Exception('Failed to load parking spots');
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -96,118 +114,57 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     }
   }
 
-  // Fetch route from Directions API and draw polyline
-  Future<void> _getDirections(LatLng destination) async {
-    final String url =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=${_currentLocation!.latitude},${_currentLocation!.longitude}&destination=${destination.latitude},${destination.longitude}&key=$googleAPIKey';
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-
-      // Extract polyline from response
-      if (data['routes'] != null && data['routes'].length > 0) {
-        final polylinePoints = data['routes'][0]['overview_polyline']['points'];
-        final polylineCoordinates = _decodePoly(polylinePoints);
-
-        setState(() {
-          // Clear previous polylines
-          _polylines.clear();
-          _polylines.add(Polyline(
-            polylineId: PolylineId('route'),
-            points: polylineCoordinates,
-            color: Colors.blue,
-            width: 5,
-          ));
-        });
-      }
-    } else {
-      throw Exception('Failed to load directions');
-    }
-  }
-
-  // Decode polyline points from the Directions API response
-  List<LatLng> _decodePoly(String poly) {
-    List<LatLng> polyline = [];
-    int index = 0;
-    int len = poly.length;
-    int lat = 0;
-    int lng = 0;
-
-    while (index < len) {
-      int shift = 0;
-      int result = 0;
-
-      // Decode latitude
-      do {
-        int byte = poly.codeUnitAt(index) - 63;
-        result |= (byte & 0x1f) << shift;
-        shift += 5;
-        index++;
-      } while (poly.codeUnitAt(index - 1) >= 0x20);
-
-      int dlat = (result & 0x1) != 0 ? ~(result >> 1) : (result >> 1);
-      lat += dlat;
-
-      shift = 0;
-      result = 0;
-
-      // Decode longitude
-      do {
-        int byte = poly.codeUnitAt(index) - 63;
-        result |= (byte & 0x1f) << shift;
-        shift += 5;
-        index++;
-      } while (poly.codeUnitAt(index - 1) >= 0x20);
-
-      int dlng = (result & 0x1) != 0 ? ~(result >> 1) : (result >> 1);
-      lng += dlng;
-
-      polyline.add(LatLng(lat / 1E5, lng / 1E5));
-    }
-
-    return polyline;
-  }
-
-  // On tapping a marker, show the route to the selected destination
-  void _onMarkerTapped(LatLng destination) {
-    setState(() {
-      selectedDestination = destination;
-    });
-    _getDirections(destination);
-    _controller?.moveCamera(CameraUpdate.newLatLng(destination)); // Move the camera to the selected destination
-  }
-
-  // Show Bottom Sheet to select destination
-  void _showDestinationList() {
-    showModalBottomSheet(
+  // Show Popup with Book Now button when a marker is tapped
+  void _onMarkerTapped(var spot) {
+    showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          height: 400,
-          child: ListView.builder(
-            itemCount: randomLocations.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('Destination ${index + 1}'),
-                onTap: () {
-                  Navigator.pop(context); // Close the bottom sheet
-                  setState(() {
-                    selectedDestination = randomLocations[index];
-                  });
-                  // Remove previous markers, add selected one, and show route
-                  _markers.add(Marker(
-                    markerId: MarkerId('selected_destination'),
-                    position: randomLocations[index],
-                    infoWindow: InfoWindow(title: 'Selected Destination'),
-                  ));
-                  _getDirections(randomLocations[index]); // Get route and display polyline
-                  _controller?.moveCamera(CameraUpdate.newLatLng(randomLocations[index])); // Move to the selected destination
-                },
-              );
-            },
+        return AlertDialog(
+          title: Text('Parking Spot ${spot['spot_id']}'),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Location: ${spot['location']}'),
+              Text('Price: ${spot['price']}'),
+              Text('EV Charging: ${spot['ev_charging'] ? 'Yes' : 'No'}'),
+              Text('Surveillance: ${spot['surveillance'] ? 'Yes' : 'No'}'),
+              Text('Cancellation Policy: ${spot['cancellation_policy']}'),
+              Text('Availability: ${spot['availability_status']}'),
+            ],
           ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Implement your booking logic here
+                // For now, we'll just close the dialog
+                Navigator.of(context).pop();
+                _bookNow(spot);
+              },
+              child: Text('Book Now'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Dummy Book Now function, replace with actual booking logic
+  void _bookNow(var spot) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Booking Confirmed'),
+          content: Text('You have booked Spot ${spot['spot_id']} at ${spot['location']}'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
         );
       },
     );
@@ -217,11 +174,13 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Google Maps with Routing'),
+        title: Text('Google Maps with Parking Spots'),
         actions: [
           IconButton(
             icon: Icon(Icons.list),
-            onPressed: _showDestinationList, // Show the Bottom Sheet when tapped
+            onPressed: () {
+              // You can add functionality to show a list of parking spots here
+            },
           ),
         ],
       ),
@@ -237,30 +196,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                   ),
                   myLocationEnabled: true,
                   myLocationButtonEnabled: false,
-                  markers: _markers.union(randomMarkers.toSet()), // Show current and random markers
+                  markers: _markers.union(parkingMarkers.toSet()), // Show current and parking spot markers
                   polylines: _polylines,
-                ),
-                Positioned(
-                  top: 20,
-                  left: 10,
-                  right: 10,
-                  child: Container(
-                    color: Colors.white,
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        labelText: 'Search destination',
-                        hintText: 'Enter place name or lat,lng',
-                        border: OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () {
-                            // Search functionality (optional)
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
                 Positioned(
                   bottom: 30,

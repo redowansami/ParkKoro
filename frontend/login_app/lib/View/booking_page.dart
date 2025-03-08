@@ -79,7 +79,7 @@
 //     }
 
 //     final response = await http.post(
-//       Uri.parse('http://127.0.0.1:5000/api/bookings'),
+//       Uri.parse('http://10.0.2.2:5000/api/bookings'),
 //       headers: {"Content-Type": "application/json"},
 //       body: jsonEncode({
 //         'spot_id': widget.spotId,
@@ -245,7 +245,7 @@ class _BookingPageState extends State<BookingPage> {
 //   };
 
 //   final response = await http.post(
-//     Uri.parse('http://127.0.0.1:5000/api/bookings'),
+//     Uri.parse('http://10.0.2.2:5000/api/bookings'),
 //     headers: {"Content-Type": "application/json"},
 //     body: jsonEncode({
 //       'spot_id': widget.spotId,
@@ -261,7 +261,7 @@ class _BookingPageState extends State<BookingPage> {
 //   if (response.statusCode == 201) {
 //     // After booking is successful, trigger SSLCommerz payment
 //     final paymentResponse = await http.post(
-//       Uri.parse('http://127.0.0.1:5000/api/payments/sslcommerz'),
+//       Uri.parse('http://10.0.2.2:5000/api/payments/sslcommerz'),
 //       headers: {"Content-Type": "application/json"},
 //       body: jsonEncode({
 //         'booking_id': data['booking_id'],
@@ -358,7 +358,7 @@ Future<void> _startSSLCommerzTransaction() async {
 
     // Call backend's create_booking API
     final response = await http.post(
-      Uri.parse("https://127.0.0.1/api/create_booking"),
+      Uri.parse("https://10.0.2.2/api/create_booking"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(bookingData),
     );

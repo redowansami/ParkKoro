@@ -27,7 +27,7 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
     }
 
     final response = await http.put(
-      Uri.parse('http://127.0.0.1:5000/edit_password'),
+      Uri.parse('http://10.0.2.2:5000/edit_password'),
       headers: { 'Content-Type': 'application/json' }, // Kept Content-Type, removed Authorization
       body: jsonEncode({
         'username': widget.username,

@@ -5,7 +5,7 @@ class AdminController {
   Future<List<dynamic>> fetchUnverifiedSpots() async {
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:5000/unverified_parking_spots'),
+        Uri.parse('http://10.0.2.2:5000/unverified_parking_spots'),
       );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -20,7 +20,7 @@ class AdminController {
   Future<void> reviewSpot(int spotId, String action) async {
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:5000/review_parking_spot/$spotId'),
+        Uri.parse('http://10.0.2.2:5000/review_parking_spot/$spotId'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'action': action}), // Send "accept" or "delete"
       );
@@ -36,7 +36,7 @@ class AdminController {
   Future<List<dynamic>> fetchAllUsers() async {
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:5000/admin/users'),
+        Uri.parse('http://10.0.2.2:5000/admin/users'),
       );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -52,7 +52,7 @@ class AdminController {
   Future<void> deleteUser(int userId) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://127.0.0.1:5000/admin/users/$userId'),
+        Uri.parse('http://10.0.2.2:5000/admin/users/$userId'),
       );
       if (response.statusCode != 200) {
         throw Exception('Failed to delete user');

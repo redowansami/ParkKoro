@@ -27,7 +27,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:5000/notifications/send'),
+        Uri.parse('http://10.0.2.2:5000/notifications/send'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"message_content": _messageController.text}),
       );

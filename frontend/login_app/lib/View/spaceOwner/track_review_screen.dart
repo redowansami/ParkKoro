@@ -23,7 +23,7 @@ class _TrackReviewsScreenState extends State<TrackReviewsScreen> {
   // Fetch parking spots owned by the owner
   Future<List<ParkingSpot>> fetchParkingSpots(String ownerId) async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/get_parking_spots'),
+      Uri.parse('http://10.0.2.2:5000/get_parking_spots'),
       headers: <String, String>{'Content-Type': 'application/json'},
       body: json.encode({'owner_id': ownerId}),
     );
@@ -39,7 +39,7 @@ class _TrackReviewsScreenState extends State<TrackReviewsScreen> {
   // Fetch reviews for a specific parking spot
   Future<List<Review>> fetchReviews(int spotId) async {
     final response = await http.get(
-      Uri.parse('http://127.0.0.1:5000/reviews/parking_spot/$spotId'),
+      Uri.parse('http://10.0.2.2:5000/reviews/parking_spot/$spotId'),
     );
 
     if (response.statusCode == 200) {

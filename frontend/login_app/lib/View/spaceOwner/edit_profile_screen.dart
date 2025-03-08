@@ -27,7 +27,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   // Function to fetch the current profile information
   Future<void> fetchProfileInfo() async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/get_profile_info'), // Adjust the backend URL accordingly
+      Uri.parse('http://10.0.2.2:5000/get_profile_info'), // Adjust the backend URL accordingly
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'username': widget.username}),
     );
@@ -53,7 +53,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   // Function to update the profile information
   Future<void> updateProfile(String nid, String email, String phone) async {
     final response = await http.put(
-      Uri.parse('http://127.0.0.1:5000/update_profile'), // Backend URL for updating profile
+      Uri.parse('http://10.0.2.2:5000/update_profile'), // Backend URL for updating profile
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'username': widget.username,

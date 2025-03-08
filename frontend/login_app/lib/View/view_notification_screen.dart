@@ -22,7 +22,7 @@ class _ViewNotificationScreenState extends State<ViewNotificationScreen> {
   Future<void> _fetchNotifications() async {
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:5000/notifications/view'), // Update with actual backend URL
+        Uri.parse('http://10.0.2.2:5000/notifications/view'), // Update with actual backend URL
       );
 
       if (response.statusCode == 200) {

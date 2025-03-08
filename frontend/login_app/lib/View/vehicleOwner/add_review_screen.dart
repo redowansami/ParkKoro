@@ -24,7 +24,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   // Fetch the booked parking spots for the user
   Future<List<ParkingSpotTemp>> fetchBookedSpots(String username) async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/booked_spot'),
+      Uri.parse('http://10.0.2.2.:5000/booked_spot'),
       headers: <String, String>{'Content-Type': 'application/json'},
       body: json.encode({'username': username}),
     );
@@ -81,7 +81,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
                 if (rating != null && reviewText.isNotEmpty) {
                   final response = await http.post(
-                    Uri.parse('http://127.0.0.1:5000/reviews/parking_spot/$spotId/add'),
+                    Uri.parse('http://10.0.2.2.:5000/reviews/parking_spot/$spotId/add'),
                     headers: <String, String>{'Content-Type': 'application/json'},
                     body: json.encode({
                       'username': widget.username,

@@ -23,7 +23,7 @@
 
 //   Future<void> fetchParkingSpots() async {
 //     final response = await http.post(
-//       Uri.parse('http://127.0.0.1:5000/get_parking_spots'),
+//       Uri.parse('http://10.0.2.2:5000/get_parking_spots'),
 //       headers: {'Content-Type': 'application/json'},
 //       body: jsonEncode({'owner_id': widget.username}),
 //     );
@@ -99,7 +99,7 @@
 
 //   Future<void> updateParkingSpot() async {
 //     final response = await http.put(
-//       Uri.parse('http://127.0.0.1:5000/edit_parking_spot'),
+//       Uri.parse('http://10.0.2.2:5000/edit_parking_spot'),
 //       headers: {'Content-Type': 'application/json'},
 //       body: jsonEncode({
 //         'spot_id': widget.spot['spot_id'],
@@ -183,7 +183,7 @@ class _EditListingScreenState extends State<EditListingScreen> {
 
   Future<void> fetchParkingSpots() async {
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/get_parking_spots'),
+      Uri.parse('http://10.0.2.2:5000/get_parking_spots'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'owner_id': widget.username}),
     );
@@ -273,7 +273,7 @@ class _EditSpotFormState extends State<EditSpotForm> {
 
   // Make the HTTP PUT request
   final response = await http.put(
-    Uri.parse('http://127.0.0.1:5000/edit_parking_spot'),
+    Uri.parse('http://10.0.2.2:5000/edit_parking_spot'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(requestBody),
   );
