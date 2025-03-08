@@ -46,6 +46,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_sslcommerz: ^2.4.1
   fluttertoast: ^8.2.12
+  url_launcher: ^6.3.1
   #flutter_secure_storage: ^9.2.4 #comment out
 
 dev_dependencies:

@@ -4,6 +4,7 @@ import 'package:login_app/View/admin/manage_users_screen.dart';
 import 'package:login_app/View/admin/review_requests_screen.dart';
 import 'package:login_app/View/admin/send_notification_screen.dart';
 import 'package:login_app/View/admin/view_review_screen.dart';
+import 'package:login_app/View/handle_refund_screen.dart';
 import 'login_page.dart';
 
 class AdminPage extends StatefulWidget {
@@ -170,8 +171,15 @@ class _AdminPageState extends State<AdminPage> {
                         context,
                         icon: Icons.payment,
                         title: 'Transactions',
-                        subtitle: 'View payments & refunds',
+                        subtitle: 'View payments',
                         navigateTo: const ManageTransactionsScreen(),
+                      ),
+                      _buildDashboardCard(
+                      context,
+                      icon: Icons.replay, // or use Icons.money_off or Icons.account_balance_wallet
+                      title: 'Refunds',
+                      subtitle: 'View and manage refunds',
+                      navigateTo: HandleRefundScreen(),
                       ),
                       _buildDashboardCard(
                         context,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:login_app/View/edit_password_screen.dart';
 import 'package:login_app/View/fetch_history_screen.dart';
 import 'package:login_app/View/vehicleOwner/add_review_screen.dart';
+import 'package:login_app/View/vehicleOwner/cancel_booking_screen.dart';
 import 'package:login_app/View/view_notification_screen.dart';
 import '../controllers/parking_spot_controller.dart';
 import '../models/parking_spot.dart';
@@ -178,7 +179,14 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                   _buildActionButton(
                     icon: Icons.cancel_outlined,
                     label: 'Cancel Booking',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CancelBookingScreen(username: widget.username), // Pass the username to the AddReviewScreen
+                        ),
+                      );
+                    },
                     iconColor: Colors.red,
                   ),
                   _buildActionButton(
