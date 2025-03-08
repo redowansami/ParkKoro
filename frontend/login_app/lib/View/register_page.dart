@@ -51,14 +51,24 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset('assets/logo.png', height: 40),
+            const SizedBox(width: 10),
+            const Text('ParkKoro', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+          ],
+        ),
+        backgroundColor: const Color(0xFF1E40AF),
+        elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (_model.userType.isEmpty) ...[
-              const Text('Select User Type:'),
+              const Text('Select User Type:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ListTile(
                 title: const Text('Vehicle Owner'),
                 leading: Radio<String>(
@@ -89,72 +99,234 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ],
             if (_nidStepVisible) ...[
-              TextField(
-                onChanged: (value) => _model.nid = value,
-                decoration: const InputDecoration(labelText: 'Enter NID'),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  onChanged: (value) => _model.nid = value,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter NID',
+                    labelStyle: TextStyle(color: Colors.blue),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _fetchVehicleOwnerData,
-                child: const Text('Submit NID'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1E40AF),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Submit NID', style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
             ],
             if (_formVisible) ...[
               if (_model.userType == 'VehicleOwner') ...[
-                TextField(
+                Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
                   controller: TextEditingController(text: _model.nid),
-                  decoration: const InputDecoration(labelText: 'NID'),
-                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: 'NID',
+                    enabled: false,
+                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  style: TextStyle(
+                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                  ),
                 ),
-                TextField(
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
                   controller: TextEditingController(text: _model.email),
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    enabled: false,
+                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  style: TextStyle(
+                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                  ),
                 ),
-                TextField(
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
                   controller: TextEditingController(text: _model.phone),
-                  decoration: const InputDecoration(labelText: 'Phone Number'),
-                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone Number',
+                    enabled: false,
+                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  style: TextStyle(
+                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                  ),
                 ),
-                TextField(
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
                   controller: TextEditingController(text: _model.carType),
-                  decoration: const InputDecoration(labelText: 'Car Type'),
-                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Car Type',
+                    enabled: false,
+                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  style: TextStyle(
+                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                  ),
                 ),
-                TextField(
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
                   controller: TextEditingController(text: _model.licensePlate),
-                  decoration: const InputDecoration(labelText: 'License Plate Number'),
-                  readOnly: true,
+                  decoration: const InputDecoration(
+                    labelText: 'License Plate Number',
+                    enabled: false,
+                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  style: TextStyle(
+                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                  ),
                 ),
-                TextField(
-                  controller: TextEditingController(text: _model.drivingLicense),
-                  decoration: const InputDecoration(labelText: 'Driving License Number'),
-                  readOnly: true,
-                ),
+              ),
+
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextField(
+                    controller: TextEditingController(text: _model.drivingLicense),
+                    decoration: const InputDecoration(
+                      labelText: 'Driving License Number',
+                      enabled: false,
+                      labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                    ),
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(.5), // Text color set to black (darker text)
+                    ),
+                  ),
+                )
               ],
-              TextField(
-                onChanged: (value) => _model.username = value,
-                decoration: const InputDecoration(labelText: 'Username'),
-              ),
-              TextField(
-                onChanged: (value) => _model.password = value,
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-              ),
-              if (_model.userType != 'VehicleOwner') ...[
-                TextField(
-                  onChanged: (value) => _model.email = value,
-                  decoration: const InputDecoration(labelText: 'Email'),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                TextField(
-                  onChanged: (value) => _model.phone = value,
-                  decoration: const InputDecoration(labelText: 'Phone Number'),
+                child: TextField(
+                  onChanged: (value) => _model.username = value,
+                  decoration: const InputDecoration(
+                    labelText: 'Username',
+                    prefixIcon: Icon(Icons.person_outline, color: Colors.blue),
+                    labelStyle: TextStyle(color: Colors.black),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  obscureText: true, // Apply the obscureText here
+                  onChanged: (value) => _model.password = value,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    prefixIcon: Icon(Icons.lock_outline, color: Colors.blue),
+                    labelStyle: TextStyle(color: Colors.black),
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              if (_model.userType != 'VehicleOwner') ...[
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextField(
+                    onChanged: (value) => _model.email = value,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.email_outlined, color: Colors.blue),
+                      labelStyle: TextStyle(color: Colors.black),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextField(
+                    onChanged: (value) => _model.phone = value,
+                    decoration: const InputDecoration(
+                      labelText: 'Phone Number',
+                      prefixIcon: Icon(Icons.phone_outlined, color: Colors.blue),
+                      labelStyle: TextStyle(color: Colors.black),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                    ),
+                  ),
                 ),
               ],
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _registerUser,
-                child: const Text('Register'),
+              Center(  // Centering the button
+                child: ElevatedButton(
+                  onPressed: _registerUser,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1E40AF),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Text('Register', style: TextStyle(fontSize: 16, color: Colors.white)),
+                ),
               ),
             ],
           ],
