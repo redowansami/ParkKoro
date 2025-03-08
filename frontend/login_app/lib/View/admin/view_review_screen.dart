@@ -29,7 +29,7 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
 
   Future<void> deleteReview(int reviewId) async {
     final response = await http.delete(
-      Uri.parse('http://192.168.1.106:5000/reviews/delete/$reviewId'),
+      Uri.parse('http://10.0.2.2:5000/reviews/delete/$reviewId'),
     );
 
     if (response.statusCode == 200) {
@@ -42,39 +42,107 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
     }
   }
 
+  // Show confirmation dialog before deleting review
+  void _showDeleteConfirmation(int reviewId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Deletion'),
+          content: const Text('Are you sure you want to delete this review?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                deleteReview(reviewId); // Proceed with deletion
+              },
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Reviews'),
+        backgroundColor: const Color(0xFF1E3A8A), // Same color theme as previous screens
+        title: const Text(
+          'All Reviews',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0.5,
+          ),
+        ),
       ),
-      body: FutureBuilder<List<Review>>(
-        future: reviews,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No reviews available.'));
-          } else {
-            final reviews = snapshot.data!;
-            return ListView.builder(
-              itemCount: reviews.length,
-              itemBuilder: (context, index) {
-                final review = reviews[index];
-                return ListTile(
-                  title: Text('${review.username} - Rating: ${review.ratingScore}'),
-                  subtitle: Text(review.reviewText),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () => deleteReview(review.reviewId),
-                  ),
-                );
-              },
-            );
-          }
-        },
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1E3A8A),
+              Color(0xFF3B82F6),
+            ],
+          ),
+        ),
+        child: FutureBuilder<List<Review>>(
+          future: reviews,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No reviews available.'));
+            } else {
+              final reviews = snapshot.data!;
+              return ListView.builder(
+                itemCount: reviews.length,
+                itemBuilder: (context, index) {
+                  final review = reviews[index];
+                  return Card(
+                    color: Colors.white.withOpacity(0.8), // Slight opacity for cards
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        '${review.username} - Rating: ${review.ratingScore}',
+                        style: const TextStyle(
+                          color: Color(0xFF1E3A8A), // Dark blue color for title
+                        ),
+                      ),
+                      subtitle: Text(
+                        review.reviewText,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        onPressed: () => _showDeleteConfirmation(review.reviewId), // Show confirmation before deletion
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

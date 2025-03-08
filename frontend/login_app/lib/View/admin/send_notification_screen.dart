@@ -56,29 +56,69 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Send Notification')),
-      body: Padding(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A), // Same color theme as previous screens
+        title: const Text(
+          'Send Notification',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1E3A8A),
+              Color(0xFF3B82F6),
+            ],
+          ),
+        ),
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Enter Notification Message:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Enter Notification Message:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
             const SizedBox(height: 10),
             TextField(
               controller: _messageController,
               maxLines: 3,
               decoration: InputDecoration(
                 hintText: 'Enter message...',
+                hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
                 border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                ),
               ),
+              style: const TextStyle(color: Colors.white),
             ),
             const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _isSending ? null : _sendNotification,
-                child: _isSending ? const CircularProgressIndicator() : const Text('Send Notification'),
-              ),
+  onPressed: _isSending ? null : _sendNotification,
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color(0xFF1E40AF), // Use backgroundColor instead of primary
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+  ),
+  child: _isSending
+      ? const CircularProgressIndicator()
+      : const Text(
+          'Send Notification',
+          style: TextStyle(fontSize: 16 , color:Colors.white),
+        ),
+)
+
             ),
           ],
         ),
