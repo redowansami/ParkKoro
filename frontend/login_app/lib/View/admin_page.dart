@@ -4,7 +4,6 @@ import 'package:login_app/View/admin/manage_users_screen.dart';
 import 'package:login_app/View/admin/review_requests_screen.dart';
 import 'package:login_app/View/admin/send_notification_screen.dart';
 import 'package:login_app/View/admin/view_review_screen.dart';
-import 'package:login_app/View/handle_refund_screen.dart';
 import 'login_page.dart';
 
 class AdminPage extends StatefulWidget {
@@ -25,20 +24,11 @@ class _AdminPageState extends State<AdminPage> {
         backgroundColor: const Color(0xFF1E3A8A),
         title: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Text(
-                "P",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E40AF),
-                ),
-              ),
+            // Only the logo here
+            Image.asset(
+              'assets/logo.png', // Add your logo here
+              height: 30, // Adjust the logo size
+              width: 30, // Adjust the logo size
             ),
             const SizedBox(width: 10),
             const Text(
@@ -52,24 +42,6 @@ class _AdminPageState extends State<AdminPage> {
           ],
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 8),
-            child: Chip(
-              backgroundColor: Colors.white.withOpacity(0.2),
-              label: Text(
-                'Welcome, ${widget.username}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-              ),
-              avatar: const Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 16,
-              ),
-            ),
-          ),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
@@ -101,10 +73,10 @@ class _AdminPageState extends State<AdminPage> {
               const Padding(
                 padding: EdgeInsets.fromLTRB(24, 20, 24, 12),
                 child: Text(
-                  'PARKKORO Management Console',
+                  'ParkKoro Admin Management Console',
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w500,
                     color: Colors.white,
                     letterSpacing: 0.5,
                   ),
@@ -116,7 +88,7 @@ class _AdminPageState extends State<AdminPage> {
                   height: 2,
                   width: 100,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(1),
                   ),
                 ),
@@ -134,68 +106,67 @@ class _AdminPageState extends State<AdminPage> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: GridView.count(
-                    crossAxisCount: 2, // Two sections per row
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    children: [
-                      _buildDashboardCard(
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Two sections per row
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: 7, // Number of dashboard cards
+                    itemBuilder: (context, index) {
+                      final items = [
+                        {
+                          'icon': Icons.list,
+                          'title': 'View Requests',
+                          'subtitle': 'Approve/reject parking spaces',
+                          'navigateTo': const ReviewRequestsScreen(),
+                        },
+                        {
+                          'icon': Icons.people,
+                          'title': 'Manage Users',
+                          'subtitle': 'View and remove users',
+                          'navigateTo': const ManageUsersScreen(),
+                        },
+                        {
+                          'icon': Icons.local_parking,
+                          'title': 'Manage Listings',
+                          'subtitle': 'View and remove listings',
+                          'navigateTo': const ManageListingsScreen(),
+                        },
+                        {
+                          'icon': Icons.star_rate,
+                          'title': 'Manage Reviews',
+                          'subtitle': 'View and remove reviews',
+                          'navigateTo': ViewReviewsScreen(),
+                        },
+                        {
+                          'icon': Icons.payment,
+                          'title': 'Transactions',
+                          'subtitle': 'View payments & refunds',
+                          'navigateTo': const ManageTransactionsScreen(),
+                        },
+                        {
+                          'icon': Icons.notifications_active,
+                          'title': 'Notifications',
+                          'subtitle': 'Send alerts',
+                          'navigateTo': const SendNotificationScreen(),
+                        },
+                        {
+                          'icon': Icons.analytics,
+                          'title': 'Analytics',
+                          'subtitle': 'View booking & revenue stats',
+                          'navigateTo': const ManageAnalyticsScreen(),
+                        },
+                      ];
+
+                      return _buildDashboardCard(
                         context,
-                        icon: Icons.list,
-                        title: 'View Requests',
-                        subtitle: 'Approve/reject parking spaces',
-                        navigateTo: const ReviewRequestsScreen(),
-                      ),
-                      _buildDashboardCard(
-                        context,
-                        icon: Icons.people,
-                        title: 'Manage Users',
-                        subtitle: 'View and remove users',
-                        navigateTo: const ManageUsersScreen(),
-                      ),
-                      _buildDashboardCard(
-                        context,
-                        icon: Icons.local_parking,
-                        title: 'Manage Listings',
-                        subtitle: 'View and remove listings',
-                        navigateTo: const ManageListingsScreen(),
-                      ),
-                      _buildDashboardCard(
-                        context,
-                        icon: Icons.star_rate,
-                        title: 'Manage Reviews',
-                        subtitle: 'View and remove reviews',
-                        navigateTo: ViewReviewsScreen(),
-                      ),
-                      _buildDashboardCard(
-                        context,
-                        icon: Icons.payment,
-                        title: 'Transactions',
-                        subtitle: 'View payments',
-                        navigateTo: const ManageTransactionsScreen(),
-                      ),
-                      _buildDashboardCard(
-                      context,
-                      icon: Icons.replay, // or use Icons.money_off or Icons.account_balance_wallet
-                      title: 'Refunds',
-                      subtitle: 'View and manage refunds',
-                      navigateTo: HandleRefundScreen(),
-                      ),
-                      _buildDashboardCard(
-                        context,
-                        icon: Icons.notifications_active,
-                        title: 'Notifications',
-                        subtitle: 'Send alerts',
-                        navigateTo: const SendNotificationScreen(),
-                      ),
-                      _buildDashboardCard(
-                        context,
-                        icon: Icons.analytics,
-                        title: 'Analytics',
-                        subtitle: 'View booking & revenue stats',
-                        navigateTo: const ManageAnalyticsScreen(),
-                      ),
-                    ],
+                        icon: items[index]['icon'] as IconData,
+                        title: items[index]['title'] as String,
+                        subtitle: items[index]['subtitle'] as String,
+                        navigateTo: items[index]['navigateTo'] as Widget,
+                      );
+                    },
                   ),
                 ),
               ),
@@ -214,7 +185,7 @@ class _AdminPageState extends State<AdminPage> {
     required Widget navigateTo,
   }) {
     return Card(
-      elevation: 2,
+      elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -233,18 +204,18 @@ class _AdminPageState extends State<AdminPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: const Color(0xFF1E40AF).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   icon,
-                  size: 34,
+                  size: 36,
                   color: const Color(0xFF1E40AF),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               Text(
                 title,
                 style: const TextStyle(
@@ -253,7 +224,7 @@ class _AdminPageState extends State<AdminPage> {
                   color: Color(0xFF1E3A8A),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 8),
               Text(
                 subtitle,
                 textAlign: TextAlign.center,

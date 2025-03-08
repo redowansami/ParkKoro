@@ -54,38 +54,86 @@ class _ReviewRequestsScreenState extends State<ReviewRequestsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Review Parking Spots')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _model.unverifiedSpots.isEmpty
-              ? const Center(child: Text('No unverified spots available.'))
-              : ListView.builder(
-                  itemCount: _model.unverifiedSpots.length,
-                  itemBuilder: (context, index) {
-                    final spot = _model.unverifiedSpots[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text('Spot ID: ${spot['spot_id']}'),
-                        subtitle: Text(
-                          'Address: ${spot['location']}\nPricing: \$${spot['price']}',
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A), // Using the same color as in AdminPage
+        title: const Text(
+          'Review Parking Spots',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1E3A8A),
+              Color(0xFF3B82F6),
+            ],
+          ),
+        ),
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _model.unverifiedSpots.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No unverified spots available.',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: _model.unverifiedSpots.length,
+                    itemBuilder: (context, index) {
+                      final spot = _model.unverifiedSpots[index];
+                      return Card(
+                        color: Colors.white.withOpacity(0.8), // Make cards a bit transparent
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.check, color: Colors.green),
-                              onPressed: () => _reviewSpot(spot['spot_id'], "accept"),
+                        child: ListTile(
+                          title: Text(
+                            'Spot ID: ${spot['spot_id']}',
+                            style: const TextStyle(
+                              color: Color(0xFF1E3A8A), // Dark blue text
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.close, color: Colors.red),
-                              onPressed: () => _reviewSpot(spot['spot_id'], "delete"),
+                          ),
+                          subtitle: Text(
+                            'Address: ${spot['location']}\nPricing: \$${spot['price']}',
+                            style: const TextStyle(
+                              color: Colors.black87,
                             ),
-                          ],
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.check,
+                                  color: Colors.green,
+                                ),
+                                onPressed: () =>
+                                    _reviewSpot(spot['spot_id'], "accept"),
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () =>
+                                    _reviewSpot(spot['spot_id'], "delete"),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
+      ),
     );
   }
 }

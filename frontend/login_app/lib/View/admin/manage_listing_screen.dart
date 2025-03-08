@@ -51,30 +51,103 @@ class _ManageListingsScreenState extends State<ManageListingsScreen> {
     }
   }
 
+  // Show confirmation dialog
+  void _showDeleteConfirmation(int spotId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Deletion'),
+          content: const Text('Are you sure you want to delete this parking spot?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _deleteParkingSpot(spotId); // Proceed with deletion
+              },
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Manage Parking Listings')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : parkingSpots.isEmpty
-              ? const Center(child: Text('No verified parking spots available.'))
-              : ListView.builder(
-                  itemCount: parkingSpots.length,
-                  itemBuilder: (context, index) {
-                    final spot = parkingSpots[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text('Spot ID: ${spot.spotID}'),
-                        subtitle: Text('Location: ${spot.location}\nPrice: \$${spot.price}'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => _deleteParkingSpot(spot.spotID),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A), // Using the same color theme
+        title: const Text(
+          'Manage Parking Listings',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1E3A8A),
+              Color(0xFF3B82F6),
+            ],
+          ),
+        ),
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : parkingSpots.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No verified parking spots available.',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: parkingSpots.length,
+                    itemBuilder: (context, index) {
+                      final spot = parkingSpots[index];
+                      return Card(
+                        color: Colors.white.withOpacity(0.8), // Slight opacity for cards
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                        child: ListTile(
+                          title: Text(
+                            'Spot ID: ${spot.spotID}',
+                            style: const TextStyle(
+                              color: Color(0xFF1E3A8A), // Dark blue color
+                            ),
+                          ),
+                          subtitle: Text(
+                            'Location: ${spot.location}\nPrice: \$${spot.price}',
+                            style: const TextStyle(
+                              color: Colors.black87,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () => _showDeleteConfirmation(spot.spotID), // Show confirmation
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+      ),
     );
   }
 }
