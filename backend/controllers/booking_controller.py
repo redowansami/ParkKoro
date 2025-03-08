@@ -257,14 +257,14 @@ def create_booking():
     transaction_id = generate_transaction_id()
 
     # Check if the spot is available for the required time period
-    overlapping_bookings = Booking.query.filter(
-        Booking.spot_id == data['spot_id'],
-        Booking.end_time > start_time,
-        Booking.start_time < end_time
-    ).all()
+    # overlapping_bookings = Booking.query.filter(
+    #     Booking.spot_id == data['spot_id'],
+    #     Booking.end_time > start_time,
+    #     Booking.start_time < end_time
+    # ).all()
 
-    if overlapping_bookings:
-        return jsonify({'message': 'The parking spot is not available during the selected time.'}), 400
+    # if overlapping_bookings:
+    #     return jsonify({'message': 'The parking spot is not available during the selected time.'}), 400
 
     # Create new booking
     new_booking = Booking(
