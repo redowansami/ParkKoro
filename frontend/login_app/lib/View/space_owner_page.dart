@@ -128,15 +128,6 @@ class _SpaceOwnerPageState extends State<SpaceOwnerPage> {
               ),
               _buildSection(
                 context,
-                icon: Icons.analytics,
-                title: 'View Analytics',
-                description: 'View performance reports and analytics.',
-                onTap: () {
-                  // Add logic for viewing analytics
-                },
-              ),
-              _buildSection(
-                context,
                 icon: Icons.rate_review,
                 title: 'Track Reviews',
                 description: 'Monitor and respond to user reviews.',

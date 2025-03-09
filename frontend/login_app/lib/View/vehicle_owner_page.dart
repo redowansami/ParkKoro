@@ -46,7 +46,6 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Full-Screen Gradient Background
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -63,7 +62,6 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // App Bar with Logo
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Row(
@@ -72,11 +70,11 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                       Row(
                         children: [
                           Image.asset(
-                            'assets/logo.png', // Path to your logo inside assets folder
-                            height: 32, // Adjust size as needed
+                            'assets/logo.png', 
+                            height: 32, 
                             fit: BoxFit.contain,
                           ),
-                          const SizedBox(width: 10), // Space between logo and text
+                          const SizedBox(width: 10), 
                           const Text(
                             'Vehicle Owner Dashboard',
                             style: TextStyle(
@@ -176,7 +174,6 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         _buildActionButton(Icons.search, "Find Parking", _navigateToGoogleMapPage, Colors.blue),
-                        _buildActionButton(Icons.bookmark, "Pre-Book", () {}, const Color.fromARGB(255, 239, 183, 0)),
                         _buildActionButton(Icons.history, "History", () {
                           Navigator.push(
                             context,
@@ -229,7 +226,7 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
         height: 100,
         margin: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.3), // White with 0.3 opacity
+          color: Colors.white.withOpacity(0.3), 
           borderRadius: BorderRadius.circular(30),
           boxShadow: [
             BoxShadow(
@@ -240,17 +237,17 @@ class _VehicleOwnerPageState extends State<VehicleOwnerPage> {
           ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center the icon and text
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 32, color: iconColor), // Keep original icon color
-            const SizedBox(height: 8), // Space between icon and text
+            Icon(icon, size: 32, color: iconColor), 
+            const SizedBox(height: 8), 
             Text(
               label,
-              textAlign: TextAlign.center, // Ensure text is centered
+              textAlign: TextAlign.center, 
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: Colors.white, // White text for visibility
+                color: Colors.white,
               ),
             ),
           ],

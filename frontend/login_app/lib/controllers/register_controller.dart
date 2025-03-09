@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../models/register_model.dart'; // Import the RegisterModel class
+import '../models/register_model.dart'; 
 
 class RegisterController {
   Future<Map<String, dynamic>> fetchVehicleOwnerData(String nid) async {

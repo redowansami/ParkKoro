@@ -43,7 +43,7 @@ class _ManageListingsScreenState extends State<ManageListingsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Parking spot deleted successfully.')),
       );
-      _fetchVerifiedSpots(); // Refresh list after deletion
+      _fetchVerifiedSpots(); 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to delete parking spot: $e')),
@@ -51,7 +51,6 @@ class _ManageListingsScreenState extends State<ManageListingsScreen> {
     }
   }
 
-  // Show confirmation dialog
   void _showDeleteConfirmation(int spotId) {
     showDialog(
       context: context,
@@ -62,14 +61,14 @@ class _ManageListingsScreenState extends State<ManageListingsScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); 
               },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                _deleteParkingSpot(spotId); // Proceed with deletion
+                Navigator.of(context).pop(); 
+                _deleteParkingSpot(spotId);
               },
               child: const Text('Delete', style: TextStyle(color: Colors.red)),
             ),
@@ -83,7 +82,7 @@ class _ManageListingsScreenState extends State<ManageListingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A), // Using the same color theme
+        backgroundColor: const Color(0xFF1E3A8A), 
         title: const Text(
           'Manage Parking Listings',
           style: TextStyle(
@@ -118,7 +117,7 @@ class _ManageListingsScreenState extends State<ManageListingsScreen> {
                     itemBuilder: (context, index) {
                       final spot = parkingSpots[index];
                       return Card(
-                        color: Colors.white.withOpacity(0.8), // Slight opacity for cards
+                        color: Colors.white.withOpacity(0.8), 
                         elevation: 4,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -127,7 +126,7 @@ class _ManageListingsScreenState extends State<ManageListingsScreen> {
                           title: Text(
                             'Spot ID: ${spot.spotID}',
                             style: const TextStyle(
-                              color: Color(0xFF1E3A8A), // Dark blue color
+                              color: Color(0xFF1E3A8A), 
                             ),
                           ),
                           subtitle: Text(
@@ -141,7 +140,7 @@ class _ManageListingsScreenState extends State<ManageListingsScreen> {
                               Icons.delete,
                               color: Colors.red,
                             ),
-                            onPressed: () => _showDeleteConfirmation(spot.spotID), // Show confirmation
+                            onPressed: () => _showDeleteConfirmation(spot.spotID), 
                           ),
                         ),
                       );

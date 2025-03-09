@@ -57,7 +57,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A), // Same color theme as previous screens
+        backgroundColor: const Color(0xFF1E3A8A), 
         title: const Text(
           'Send Notification',
           style: TextStyle(
@@ -106,7 +106,7 @@ class _SendNotificationScreenState extends State<SendNotificationScreen> {
               child: ElevatedButton(
   onPressed: _isSending ? null : _sendNotification,
   style: ElevatedButton.styleFrom(
-    backgroundColor: const Color(0xFF1E40AF), // Use backgroundColor instead of primary
+    backgroundColor: const Color(0xFF1E40AF),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(12),
     ),

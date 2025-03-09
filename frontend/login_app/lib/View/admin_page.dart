@@ -4,6 +4,7 @@ import 'package:login_app/View/admin/manage_users_screen.dart';
 import 'package:login_app/View/admin/review_requests_screen.dart';
 import 'package:login_app/View/admin/send_notification_screen.dart';
 import 'package:login_app/View/admin/view_review_screen.dart';
+import 'package:login_app/View/admin/transactions_screen.dart';
 import 'login_page.dart';
 
 class AdminPage extends StatefulWidget {
@@ -24,11 +25,10 @@ class _AdminPageState extends State<AdminPage> {
         backgroundColor: const Color(0xFF1E3A8A),
         title: Row(
           children: [
-            // Only the logo here
             Image.asset(
-              'assets/logo.png', // Add your logo here
-              height: 30, // Adjust the logo size
-              width: 30, // Adjust the logo size
+              'assets/logo.png', 
+              height: 30, 
+              width: 30, 
             ),
             const SizedBox(width: 10),
             const Text(
@@ -108,11 +108,11 @@ class _AdminPageState extends State<AdminPage> {
                   padding: const EdgeInsets.all(16.0),
                   child: GridView.builder(
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Two sections per row
+                      crossAxisCount: 2, 
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
                     ),
-                    itemCount: 7, // Number of dashboard cards
+                    itemCount: 6, 
                     itemBuilder: (context, index) {
                       final items = [
                         {
@@ -143,19 +143,13 @@ class _AdminPageState extends State<AdminPage> {
                           'icon': Icons.payment,
                           'title': 'Transactions',
                           'subtitle': 'View payments & refunds',
-                          'navigateTo': const ManageTransactionsScreen(),
+                          'navigateTo': TransactionsScreen(),
                         },
                         {
                           'icon': Icons.notifications_active,
                           'title': 'Notifications',
                           'subtitle': 'Send alerts',
                           'navigateTo': const SendNotificationScreen(),
-                        },
-                        {
-                          'icon': Icons.analytics,
-                          'title': 'Analytics',
-                          'subtitle': 'View booking & revenue stats',
-                          'navigateTo': const ManageAnalyticsScreen(),
                         },
                       ];
 
@@ -241,7 +235,6 @@ class _AdminPageState extends State<AdminPage> {
   }
 }
 
-// Dummy Screens for Navigation
 class ManageTransactionsScreen extends StatelessWidget {
   const ManageTransactionsScreen({super.key});
 
@@ -257,46 +250,6 @@ class ManageTransactionsScreen extends StatelessWidget {
       ),
       body: Center(
         child: Text('Transaction features will be added here.'),
-      ),
-    );
-  }
-}
-
-class ManageNotificationsScreen extends StatelessWidget {
-  const ManageNotificationsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A),
-        title: const Text(
-          'Manage Notifications',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Center(
-        child: Text('Notification features will be added here.'),
-      ),
-    );
-  }
-}
-
-class ManageAnalyticsScreen extends StatelessWidget {
-  const ManageAnalyticsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A),
-        title: const Text(
-          'Manage Analytics',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: Center(
-        child: Text('Analytics features will be added here.'),
       ),
     );
   }

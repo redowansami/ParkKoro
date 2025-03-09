@@ -30,7 +30,6 @@ class SSLCommerzScreen extends StatelessWidget {
 
   Future<void> _startSSLCommerzTransaction(BuildContext context) async {
     try {
-      // Initialize SSLCommerz SDK
       Sslcommerz sslcommerz = Sslcommerz(
         initializer: SSLCommerzInitialization(
           sdkType: SSLCSdkType.TESTBOX,
@@ -44,7 +43,6 @@ class SSLCommerzScreen extends StatelessWidget {
         ),
       );
 
-      // Adding Shipment Information
       sslcommerz.addShipmentInfoInitializer(
         sslcShipmentInfoInitializer: SSLCShipmentInfoInitializer(
           shipmentMethod: "yes",
@@ -59,7 +57,6 @@ class SSLCommerzScreen extends StatelessWidget {
         ),
       );
 
-      // Adding Customer Information
       sslcommerz.addCustomerInfoInitializer(
         customerInfoInitializer: SSLCCustomerInfoInitializer(
           customerName: renterId,
@@ -73,7 +70,6 @@ class SSLCommerzScreen extends StatelessWidget {
         ),
       );
 
-      // Initiating Payment
       SSLCTransactionInfoModel result = await sslcommerz.payNow();
       _onPaymentSuccess(result, context);
       _displayPaymentStatus(result);
@@ -84,7 +80,6 @@ class SSLCommerzScreen extends StatelessWidget {
 
   Future<void> _onPaymentSuccess(SSLCTransactionInfoModel result, BuildContext context) async {
     if (result.status?.toLowerCase()!="failed" && result.status?.toLowerCase()!="closed") {                                                
-      // Prepare booking data to send to backend
       Map<String, dynamic> bookingData = {
         "spot_id": spotId,
         "start_time": startTime.toString(),
@@ -93,7 +88,6 @@ class SSLCommerzScreen extends StatelessWidget {
         "renter_id": renterId,
       };
 
-      // Call backend's create_booking API
       final response = await http.post(
         Uri.parse("http://10.0.2.2:5000/api/bookings"),
         headers: {"Content-Type": "application/json"},
@@ -111,7 +105,6 @@ class SSLCommerzScreen extends StatelessWidget {
     }
   }
 
-  // Function to display payment status
   void _displayPaymentStatus(SSLCTransactionInfoModel result) {
     String message;
     Color bgColor;

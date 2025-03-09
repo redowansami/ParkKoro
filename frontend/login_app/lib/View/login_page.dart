@@ -91,15 +91,14 @@ class _LoginPageState extends State<LoginPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center, // Vertically center the content
+        mainAxisAlignment: MainAxisAlignment.center, 
         children: [
-          // Top section with logo
           Column(
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               // Logo
               Container(
-                //padding: const EdgeInsets.all(0),
+          
                  decoration: BoxDecoration(
                 //   color: Colors.white.withOpacity(0.1),
                 //   borderRadius: BorderRadius.circular(20),
@@ -141,7 +140,6 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
           
-          // Middle section with welcome text and buttons (centered)
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

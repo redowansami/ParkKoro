@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 class ViewCameraPage extends StatefulWidget {
   final String ownerId;
 
-  // Constructor to receive the ownerId (username)
   ViewCameraPage({required this.ownerId});
 
   @override
@@ -31,12 +30,11 @@ class _ViewCameraPageState extends State<ViewCameraPage> {
   }
 
   Future<void> launchURL(String url) async {
-    // Parse the camera URL into the desired format
-    final uri = Uri.parse(url); // Parsing the original URL
-    final host = uri.host; // Extract the host (domain) from the URL
-    final path = uri.path; // Extract the path from the URL
     
-    // Format and launch the URL in the desired format
+    final uri = Uri.parse(url); 
+    final host = uri.host; 
+    final path = uri.path; 
+    
     launchUrl(Uri.https(host, path));
   }
 
@@ -63,8 +61,7 @@ class _ViewCameraPageState extends State<ViewCameraPage> {
                     title: Text('Camera ${cameras[index]['camera_id']}'),
                     subtitle: Text(cameras[index]['url']),
                     onTap: () async {
-                      // Launch URL using the new method
-                      launchUrl(Uri.parse(cameras[index]['url']));  // Using Uri.parse here for correct URL format
+                      launchUrl(Uri.parse(cameras[index]['url']));  
                     },
                   );
                 },

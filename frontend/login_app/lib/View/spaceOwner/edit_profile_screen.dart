@@ -214,7 +214,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               emailController.text,
                                               phoneController.text,
                                             );
-                                            Navigator.pop(context); // Close the dialog
+                                            Navigator.pop(context); 
                                           },
                                           child: const Text(
                                             "Update",

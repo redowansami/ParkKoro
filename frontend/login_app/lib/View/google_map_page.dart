@@ -7,9 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:login_app/View/booking_screen.dart';
 
 class GoogleMapPage extends StatefulWidget {
-  final String username; // Add this field to accept username
+  final String username; 
 
-  const GoogleMapPage({super.key, required this.username}); // Update the constructor
+  const GoogleMapPage({super.key, required this.username}); 
 
   @override
   _GoogleMapPageState createState() => _GoogleMapPageState();
@@ -27,8 +27,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   List<LatLng> parkingLocations = [];
   List<Marker> parkingMarkers = [];
 
-  final String googleAPIKey = 'API_KEY'; // Replace with your API key
-  final String backendUrl = 'http://10.0.2.2:5000/search_nearest_parking_spots'; // Your backend URL
+  final String googleAPIKey = 'API_KEY'; 
+  final String backendUrl = 'http://10.0.2.2:5000/search_nearest_parking_spots'; 
 
   @override
   void initState() {
@@ -37,9 +37,9 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   }
 
   Future<void> _getCurrentLocation() async {
-    // Set the current location to the specified lat: 92.5 and long: 91.2
     setState(() {
-      _currentLocation = LatLng(23.725071, 90.410550);
+
+      _currentLocation = LatLng(37.422054, -122.085324);
       _markers.add(Marker(
         markerId: MarkerId('current_location'),
         position: _currentLocation!,
@@ -47,10 +47,9 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         icon: BitmapDescriptor.defaultMarker,
       ));
     });
-    _fetchParkingSpots(); // Fetch parking spots after setting the location
+    _fetchParkingSpots();
   }
 
-  // Fetch parking spots from the backend
   Future<void> _fetchParkingSpots() async {
     if (_currentLocation == null) return;
 
@@ -83,7 +82,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
               snippet: 'Price: ${spot['price']}',
             ),
             onTap: () {
-              _onMarkerTapped(spot);  // Pass the spot data to the handler
+              _onMarkerTapped(spot); 
             },
           ));
         }
@@ -117,7 +116,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     }
   }
 
-  // Show Popup with Book Now button when a marker is tapped
   void _onMarkerTapped(var spot) {
     showDialog(
       context: context,
@@ -139,16 +137,15 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
           actions: <Widget>[
             TextButton(
              onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
+              Navigator.of(context).pop(); 
               
-              // Navigate to the BookingPage with the necessary arguments
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => BookingScreen(
-                      spotId: spot['spot_id'],  // Pass spotId
-                      pricePerHour: double.parse(spot['price'].toString()),  // Pass pricePerHour
-                      renterId: widget.username,  // Replace with actual renterId
+                      spotId: spot['spot_id'],  
+                      pricePerHour: double.parse(spot['price'].toString()), 
+                      renterId: widget.username, 
                     ),
                   ),
                 );
@@ -161,7 +158,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     );
   }
 
-  // Dummy Book Now function, replace with actual booking logic
   void _bookNow(var spot) {
     showDialog(
       context: context,

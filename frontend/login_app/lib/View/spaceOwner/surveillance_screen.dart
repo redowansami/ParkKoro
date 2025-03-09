@@ -45,7 +45,6 @@ class SurveillanceScreenPage extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigate to the Add Camera page, passing the username
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -71,7 +70,6 @@ class SurveillanceScreenPage extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigate to the View Camera page, passing the username
                         Navigator.push(
                           context,
                           MaterialPageRoute(

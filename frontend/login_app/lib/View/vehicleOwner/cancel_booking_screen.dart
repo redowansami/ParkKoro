@@ -21,7 +21,6 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
     fetchFutureBookings();
   }
 
-  // Fetch future bookings for the specific user
   Future<void> fetchFutureBookings() async {
     try {
       final response = await http.post(
@@ -48,7 +47,6 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
     }
   }
 
-  // Cancel booking and create refund request
   Future<void> cancelBooking(String bookingId) async {
     bool confirmCancel = await _showConfirmationDialog(bookingId);
     if (!confirmCancel) return;
@@ -77,7 +75,6 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
     }
   }
 
-  // Show Confirmation Dialog Before Canceling
   Future<bool> _showConfirmationDialog(String bookingId) async {
     return await showDialog(
       context: context,
@@ -102,7 +99,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A), // Theme color
+        backgroundColor: const Color(0xFF1E3A8A), 
         title: const Text(
           'Cancel Bookings',
           style: TextStyle(color: Colors.white),

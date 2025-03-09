@@ -50,7 +50,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     }
   }
 
-  // Show confirmation dialog
   void _showDeleteConfirmation(String username) {
     showDialog(
       context: context,
@@ -61,14 +60,14 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                _deleteUser(username); // Proceed with deletion
+                Navigator.of(context).pop(); 
+                _deleteUser(username);
               },
               child: const Text('Delete', style: TextStyle(color: Colors.red)),
             ),
@@ -82,7 +81,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A), // Using the same color theme
+        backgroundColor: const Color(0xFF1E3A8A),
         title: const Text(
           'Manage Users',
           style: TextStyle(
@@ -117,7 +116,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                     itemBuilder: (context, index) {
                       final user = users[index];
                       return Card(
-                        color: Colors.white.withOpacity(0.8), // Slight opacity for cards
+                        color: Colors.white.withOpacity(0.8), 
                         elevation: 4,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -126,7 +125,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                           title: Text(
                             user['username'],
                             style: const TextStyle(
-                              color: Color(0xFF1E3A8A), // Dark blue color
+                              color: Color(0xFF1E3A8A), 
                             ),
                           ),
                           subtitle: Text(
@@ -140,7 +139,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                               Icons.delete,
                               color: Colors.red,
                             ),
-                            onPressed: () => _showDeleteConfirmation(user['username']), // Show confirmation
+                            onPressed: () => _showDeleteConfirmation(user['username']), 
                           ),
                         ),
                       );

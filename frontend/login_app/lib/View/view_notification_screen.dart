@@ -22,7 +22,7 @@ class _ViewNotificationScreenState extends State<ViewNotificationScreen> {
   Future<void> _fetchNotifications() async {
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:5000/notifications/view'), // Update with actual backend URL
+        Uri.parse('http://10.0.2.2:5000/notifications/view'), 
       );
 
       if (response.statusCode == 200) {
@@ -52,7 +52,7 @@ class _ViewNotificationScreenState extends State<ViewNotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A), // Theme color
+        backgroundColor: const Color(0xFF1E3A8A), 
         title: const Text(
           'Notifications',
           style: TextStyle(color: Colors.white),
@@ -84,7 +84,7 @@ class _ViewNotificationScreenState extends State<ViewNotificationScreen> {
                     itemBuilder: (context, index) {
                       final notification = notifications[index];
                       return Card(
-                        color: Colors.white.withOpacity(0.9), // Slight opacity for a smooth look
+                        color: Colors.white.withOpacity(0.9), 
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

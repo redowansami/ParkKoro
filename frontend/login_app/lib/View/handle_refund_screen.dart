@@ -38,7 +38,7 @@ class _HandleRefundScreenState extends State<HandleRefundScreen> {
     );
 
     if (response.statusCode == 200) {
-      fetchRefundRequests(); // Refresh the list after status update
+      fetchRefundRequests(); 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Refund status updated successfully')));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update status')));
@@ -72,12 +72,12 @@ class _HandleRefundScreenState extends State<HandleRefundScreen> {
               ),
               trailing: isHandled
                   ? ElevatedButton(
-                      onPressed: null, // Disable button if already handled
+                      onPressed: null, 
                       child: Text('Handled'),
                     )
                   : ElevatedButton(
                       onPressed: () {
-                        String newStatus = 'Completed'; // Change this based on the admin's action
+                        String newStatus = 'Completed'; 
                         updateRefundStatus(request['refund_id'], newStatus);
                       },
                       child: Text('Mark as Handled'),

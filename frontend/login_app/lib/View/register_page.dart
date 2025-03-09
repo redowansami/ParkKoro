@@ -136,12 +136,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: const InputDecoration(
                     labelText: 'NID',
                     enabled: false,
-                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    labelStyle: TextStyle(color: Colors.black),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   style: TextStyle(
-                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                    color: Colors.black.withOpacity(0.5),
                   ),
                 ),
               ),
@@ -156,12 +156,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     enabled: false,
-                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    labelStyle: TextStyle(color: Colors.black), 
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   style: TextStyle(
-                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                    color: Colors.black.withOpacity(0.5), 
                   ),
                 ),
               ),
@@ -176,12 +176,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: const InputDecoration(
                     labelText: 'Phone Number',
                     enabled: false,
-                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    labelStyle: TextStyle(color: Colors.black),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   style: TextStyle(
-                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                    color: Colors.black.withOpacity(0.5),
                   ),
                 ),
               ),
@@ -196,12 +196,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: const InputDecoration(
                     labelText: 'Car Type',
                     enabled: false,
-                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    labelStyle: TextStyle(color: Colors.black), 
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   style: TextStyle(
-                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                    color: Colors.black.withOpacity(0.5), 
                   ),
                 ),
               ),
@@ -216,12 +216,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: const InputDecoration(
                     labelText: 'License Plate Number',
                     enabled: false,
-                    labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                    labelStyle: TextStyle(color: Colors.black), 
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   style: TextStyle(
-                    color: Colors.black.withOpacity(0.5), // Darker text color for visibility
+                    color: Colors.black.withOpacity(0.5), 
                   ),
                 ),
               ),
@@ -236,12 +236,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     decoration: const InputDecoration(
                       labelText: 'Driving License Number',
                       enabled: false,
-                      labelStyle: TextStyle(color: Colors.black), // Label color set to black
+                      labelStyle: TextStyle(color: Colors.black), 
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(vertical: 15),
                     ),
                     style: TextStyle(
-                      color: Colors.black.withOpacity(.5), // Text color set to black (darker text)
+                      color: Colors.black.withOpacity(.5), 
                     ),
                   ),
                 )

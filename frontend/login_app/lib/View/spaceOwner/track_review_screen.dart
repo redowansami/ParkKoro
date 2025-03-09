@@ -20,7 +20,6 @@ class _TrackReviewsScreenState extends State<TrackReviewsScreen> {
     parkingSpots = fetchParkingSpots(widget.ownerId);
   }
 
-  // Fetch parking spots owned by the owner
   Future<List<ParkingSpot>> fetchParkingSpots(String ownerId) async {
     final response = await http.post(
       Uri.parse('http://10.0.2.2:5000/get_parking_spots'),
@@ -36,7 +35,6 @@ class _TrackReviewsScreenState extends State<TrackReviewsScreen> {
     }
   }
 
-  // Fetch reviews for a specific parking spot
   Future<List<Review>> fetchReviews(int spotId) async {
     final response = await http.get(
       Uri.parse('http://10.0.2.2:5000/reviews/parking_spot/$spotId'),
@@ -152,7 +150,6 @@ class _TrackReviewsScreenState extends State<TrackReviewsScreen> {
   }
 }
 
-// Model for Parking Spot
 class ParkingSpot {
   final int spotId;
   final String location;
@@ -188,7 +185,6 @@ class ParkingSpot {
   }
 }
 
-// Model for Review
 class Review {
   final int reviewId;
   final String username;

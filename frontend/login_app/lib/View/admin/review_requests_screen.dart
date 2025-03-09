@@ -55,7 +55,7 @@ class _ReviewRequestsScreenState extends State<ReviewRequestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A), // Using the same color as in AdminPage
+        backgroundColor: const Color(0xFF1E3A8A), 
         title: const Text(
           'Review Parking Spots',
           style: TextStyle(
@@ -90,7 +90,7 @@ class _ReviewRequestsScreenState extends State<ReviewRequestsScreen> {
                     itemBuilder: (context, index) {
                       final spot = _model.unverifiedSpots[index];
                       return Card(
-                        color: Colors.white.withOpacity(0.8), // Make cards a bit transparent
+                        color: Colors.white.withOpacity(0.8), 
                         elevation: 4,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -99,7 +99,7 @@ class _ReviewRequestsScreenState extends State<ReviewRequestsScreen> {
                           title: Text(
                             'Spot ID: ${spot['spot_id']}',
                             style: const TextStyle(
-                              color: Color(0xFF1E3A8A), // Dark blue text
+                              color: Color(0xFF1E3A8A), 
                             ),
                           ),
                           subtitle: Text(

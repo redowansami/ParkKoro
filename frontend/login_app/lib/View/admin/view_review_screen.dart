@@ -34,7 +34,7 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
 
     if (response.statusCode == 200) {
       setState(() {
-        reviews = fetchReviews(); // Refresh the reviews after deletion
+        reviews = fetchReviews();
       });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Review deleted successfully')));
     } else {
@@ -42,7 +42,6 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
     }
   }
 
-  // Show confirmation dialog before deleting review
   void _showDeleteConfirmation(int reviewId) {
     showDialog(
       context: context,
@@ -53,14 +52,14 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                deleteReview(reviewId); // Proceed with deletion
+                Navigator.of(context).pop();
+                deleteReview(reviewId); 
               },
               child: const Text('Delete', style: TextStyle(color: Colors.red)),
             ),
@@ -74,7 +73,7 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A8A), // Same color theme as previous screens
+        backgroundColor: const Color(0xFF1E3A8A),
         title: const Text(
           'All Reviews',
           style: TextStyle(
@@ -111,7 +110,7 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
                 itemBuilder: (context, index) {
                   final review = reviews[index];
                   return Card(
-                    color: Colors.white.withOpacity(0.8), // Slight opacity for cards
+                    color: Colors.white.withOpacity(0.8), 
                     elevation: 4,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -120,7 +119,7 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
                       title: Text(
                         '${review.username} - Rating: ${review.ratingScore}',
                         style: const TextStyle(
-                          color: Color(0xFF1E3A8A), // Dark blue color for title
+                          color: Color(0xFF1E3A8A), 
                         ),
                       ),
                       subtitle: Text(
@@ -134,7 +133,7 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
                           Icons.delete,
                           color: Colors.red,
                         ),
-                        onPressed: () => _showDeleteConfirmation(review.reviewId), // Show confirmation before deletion
+                        onPressed: () => _showDeleteConfirmation(review.reviewId),
                       ),
                     ),
                   );
