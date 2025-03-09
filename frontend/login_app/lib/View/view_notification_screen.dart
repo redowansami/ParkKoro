@@ -51,28 +51,70 @@ class _ViewNotificationScreenState extends State<ViewNotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Notifications')),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : notifications.isEmpty
-              ? const Center(child: Text('No notifications found'))
-              : ListView.builder(
-                  itemCount: notifications.length,
-                  itemBuilder: (context, index) {
-                    final notification = notifications[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      child: ListTile(
-                        leading: const Icon(Icons.notifications, color: Colors.blue),
-                        title: Text(
-                          notification['message_content'],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A), // Theme color
+        title: const Text(
+          'Notifications',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1E3A8A),
+              Color(0xFF3B82F6),
+            ],
+          ),
+        ),
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : notifications.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No notifications found',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: notifications.length,
+                    itemBuilder: (context, index) {
+                      final notification = notifications[index];
+                      return Card(
+                        color: Colors.white.withOpacity(0.9), // Slight opacity for a smooth look
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        subtitle: Text('Date: ${notification['timestamp']}'),
-                      ),
-                    );
-                  },
-                ),
+                        elevation: 3,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(16),
+                          leading: const CircleAvatar(
+                            backgroundColor: Color(0xFF1E3A8A),
+                            child: Icon(Icons.notifications, color: Colors.white),
+                          ),
+                          title: Text(
+                            notification['message_content'],
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1E3A8A),
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              'Date: ${notification['timestamp']}',
+                              style: const TextStyle(fontSize: 14, color: Colors.black87),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+      ),
     );
   }
 }

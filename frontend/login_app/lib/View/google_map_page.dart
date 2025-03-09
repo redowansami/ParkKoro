@@ -39,7 +39,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   Future<void> _getCurrentLocation() async {
     // Set the current location to the specified lat: 92.5 and long: 91.2
     setState(() {
-      _currentLocation = LatLng(23.7, 90.3);
+      _currentLocation = LatLng(23.725071, 90.410550);
       _markers.add(Marker(
         markerId: MarkerId('current_location'),
         position: _currentLocation!,

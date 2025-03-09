@@ -5,7 +5,7 @@ import 'dart:convert';
 class TrackReviewsScreen extends StatefulWidget {
   final String ownerId;
 
-  TrackReviewsScreen({required this.ownerId});
+  const TrackReviewsScreen({required this.ownerId, Key? key}) : super(key: key);
 
   @override
   _TrackReviewsScreenState createState() => _TrackReviewsScreenState();
@@ -54,70 +54,99 @@ class _TrackReviewsScreenState extends State<TrackReviewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Track Reviews for Your Parking Spots'),
+        backgroundColor: const Color(0xFF1E3A8A),
+        title: const Text(
+          'Track Reviews for Your Parking Spots',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
-      body: FutureBuilder<List<ParkingSpot>>(
-        future: parkingSpots,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No parking spots available.'));
-          } else {
-            final spots = snapshot.data!;
-            return ListView.builder(
-              itemCount: spots.length,
-              itemBuilder: (context, index) {
-                final spot = spots[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  child: ExpansionTile(
-                    title: Text(spot.location),
-                    subtitle: Text('Price: \$${spot.price} per hour'),
-                    children: [
-                      FutureBuilder<List<Review>>(
-                        future: fetchReviews(spot.spotId),
-                        builder: (context, reviewSnapshot) {
-                          if (reviewSnapshot.connectionState == ConnectionState.waiting) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (reviewSnapshot.hasError) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Error loading reviews: ${reviewSnapshot.error}'),
-                            );
-                          } else if (!reviewSnapshot.hasData || reviewSnapshot.data!.isEmpty) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('No reviews yet for this parking spot.'),
-                            );
-                          } else {
-                            final reviews = reviewSnapshot.data!;
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: reviews.length,
-                              itemBuilder: (context, index) {
-                                final review = reviews[index];
-                                return ListTile(
-                                  title: Text('${review.username} - Rating: ${review.ratingScore}'),
-                                  subtitle: Text(review.reviewText),
-                                );
-                              },
-                            );
-                          }
-                        },
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1E3A8A),
+              Color(0xFF3B82F6),
+            ],
+          ),
+        ),
+        child: FutureBuilder<List<ParkingSpot>>(
+          future: parkingSpots,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator(color: Colors.white));
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.white)));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No parking spots available.', style: TextStyle(color: Colors.white)));
+            } else {
+              final spots = snapshot.data!;
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: spots.length,
+                itemBuilder: (context, index) {
+                  final spot = spots[index];
+                  return Card(
+                    color: Colors.white.withOpacity(0.9),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 3,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: ExpansionTile(
+                      title: Text(
+                        spot.location,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ],
-                  ),
-                );
-              },
-            );
-          }
-        },
+                      subtitle: Text('Price: \$${spot.price} per hour'),
+                      children: [
+                        FutureBuilder<List<Review>>(
+                          future: fetchReviews(spot.spotId),
+                          builder: (context, reviewSnapshot) {
+                            if (reviewSnapshot.connectionState == ConnectionState.waiting) {
+                              return const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (reviewSnapshot.hasError) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text('Error loading reviews: ${reviewSnapshot.error}'),
+                              );
+                            } else if (!reviewSnapshot.hasData || reviewSnapshot.data!.isEmpty) {
+                              return const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('No reviews yet for this parking spot.'),
+                              );
+                            } else {
+                              final reviews = reviewSnapshot.data!;
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: reviews.length,
+                                itemBuilder: (context, index) {
+                                  final review = reviews[index];
+                                  return ListTile(
+                                    title: Text(
+                                      '${review.username} - Rating: ${review.ratingScore}',
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(review.reviewText),
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

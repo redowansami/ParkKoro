@@ -20,15 +20,15 @@ class BookingEarnings {
       bookingId: json['booking_id'],
       spotId: json['spot_id'],
       bookingDate: json['booking_date'],
-      amount: json['amount'],  // The amount from the Payment table
+      amount: json['amount'], // The amount from the Payment table
     );
   }
 }
 
 class FetchEarningsScreen extends StatefulWidget {
-  final String ownerId;  // Pass owner_id when navigating
+  final String ownerId; // Pass owner_id when navigating
 
-  FetchEarningsScreen({required this.ownerId});
+  const FetchEarningsScreen({required this.ownerId, Key? key}) : super(key: key);
 
   @override
   _FetchEarningsScreenState createState() => _FetchEarningsScreenState();
@@ -57,31 +57,75 @@ class _FetchEarningsScreenState extends State<FetchEarningsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Earnings")),
-      body: FutureBuilder<List<BookingEarnings>>(
-        future: earnings,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No earnings found.'));
-          } else {
-            List<BookingEarnings> earningsList = snapshot.data!;
-            return ListView.builder(
-              itemCount: earningsList.length,
-              itemBuilder: (context, index) {
-                final earning = earningsList[index];
-                return ListTile(
-                  title: Text('Booking ID: ${earning.bookingId}'),
-                  subtitle: Text('Spot ID: ${earning.spotId}\nBooking Date: ${earning.bookingDate}\nAmount: ${earning.amount}'),
-                  isThreeLine: true,
-                );
-              },
-            );
-          }
-        },
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A),
+        title: const Text(
+          'Earnings',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1E3A8A),
+              Color(0xFF3B82F6),
+            ],
+          ),
+        ),
+        child: FutureBuilder<List<BookingEarnings>>(
+          future: earnings,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  'Error: ${snapshot.error}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No earnings found.',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            } else {
+              List<BookingEarnings> earningsList = snapshot.data!;
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: earningsList.length,
+                itemBuilder: (context, index) {
+                  final earning = earningsList[index];
+                  return Card(
+                    color: Colors.white.withOpacity(0.9),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 3,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: ListTile(
+                      title: Text(
+                        'Booking ID: ${earning.bookingId}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Spot ID: ${earning.spotId}\nBooking Date: ${earning.bookingDate}\nAmount: ${earning.amount}',
+                      ),
+                      isThreeLine: true,
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

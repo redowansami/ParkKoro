@@ -20,13 +20,13 @@ class BookingHistory {
       bookingId: json['booking_id'],
       spotId: json['spot_id'],
       bookingDate: json['booking_date'],
-      amount: json['amount'],  // Removed cancellation_status
+      amount: json['amount'],
     );
   }
 }
 
 class FetchHistoryScreen extends StatefulWidget {
-  final String renterId;  // Pass renter_id when navigating
+  final String renterId;
 
   FetchHistoryScreen({required this.renterId});
 
@@ -57,31 +57,83 @@ class _FetchHistoryScreenState extends State<FetchHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Booking History")),
-      body: FutureBuilder<List<BookingHistory>>(
-        future: bookingHistory,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No bookings found.'));
-          } else {
-            List<BookingHistory> bookings = snapshot.data!;
-            return ListView.builder(
-              itemCount: bookings.length,
-              itemBuilder: (context, index) {
-                final booking = bookings[index];
-                return ListTile(
-                  title: Text('Booking ID: ${booking.bookingId}'),
-                  subtitle: Text('Spot ID: ${booking.spotId}\nBooking Date: ${booking.bookingDate}\nAmount: ${booking.amount}'),
-                  isThreeLine: true,
-                );
-              },
-            );
-          }
-        },
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF1E3A8A), // Theme color
+        title: const Text(
+          "Booking History",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1E3A8A),
+              Color(0xFF3B82F6),
+            ],
+          ),
+        ),
+        child: FutureBuilder<List<BookingHistory>>(
+          future: bookingHistory,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  'Error: ${snapshot.error}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No bookings found.',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              );
+            } else {
+              List<BookingHistory> bookings = snapshot.data!;
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: bookings.length,
+                itemBuilder: (context, index) {
+                  final booking = bookings[index];
+                  return Card(
+                    color: Colors.white.withOpacity(0.9), // Slight opacity for a smooth look
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 3,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(16),
+                      title: Text(
+                        'Booking ID: ${booking.bookingId}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E3A8A),
+                        ),
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          'Spot ID: ${booking.spotId}\n'
+                          'Booking Date: ${booking.bookingDate}\n'
+                          'Amount: ${booking.amount}',
+                          style: const TextStyle(fontSize: 14, color: Colors.black87),
+                        ),
+                      ),
+                      isThreeLine: true,
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }
