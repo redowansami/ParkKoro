@@ -28,7 +28,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   List<Marker> parkingMarkers = [];
 
   final String googleAPIKey = 'API_KEY'; // Replace with your API key
-  final String backendUrl = 'http://10.0.2.2:5000/search_current_nearest_parking_spots'; // Your backend URL
+  final String backendUrl = 'http://10.0.2.2:5000/search_nearest_parking_spots'; // Your backend URL
 
   @override
   void initState() {

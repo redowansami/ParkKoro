@@ -17,7 +17,7 @@ class _ViewReviewsScreenState extends State<ViewReviewsScreen> {
   }
 
   Future<List<Review>> fetchReviews() async {
-    final response = await http.get(Uri.parse('http://192.168.1.106:5000/view_all_reviews'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:5000/view_all_reviews'));
 
     if (response.statusCode == 200) {
       final List<dynamic> reviewList = json.decode(response.body);
