@@ -75,14 +75,14 @@ class SSLCommerzScreen extends StatelessWidget {
 
       // Initiating Payment
       SSLCTransactionInfoModel result = await sslcommerz.payNow();
-      _onPaymentSuccess(result);
+      _onPaymentSuccess(result, context);
       _displayPaymentStatus(result);
     } catch (e) {
       Fluttertoast.showToast(msg: "Error: $e");
     }
   }
 
-  Future<void> _onPaymentSuccess(SSLCTransactionInfoModel result) async {
+  Future<void> _onPaymentSuccess(SSLCTransactionInfoModel result, BuildContext context) async {
     if (result.status?.toLowerCase()!="failed" && result.status?.toLowerCase()!="closed") {                                                
       // Prepare booking data to send to backend
       Map<String, dynamic> bookingData = {
@@ -102,6 +102,7 @@ class SSLCommerzScreen extends StatelessWidget {
 
       if (response.statusCode == 201) {
         Fluttertoast.showToast(msg: "Booking successful!");
+        Navigator.pop(context);
       } else {
         Fluttertoast.showToast(msg: "Booking failed: ${response.body}");
       }
